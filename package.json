@@ -1,0 +1,31 @@
+{
+  "name": "github-issue-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build",
+    "test": "jest ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefanbuck/github-issue-praser.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefanbuck/github-issue-praser/issues"
+  },
+  "homepage": "https://github.com/stefanbuck/github-issue-praser#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "js-yaml": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.28.2",
+    "jest": "^26.6.3",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^8.0.0"
+  }
+}

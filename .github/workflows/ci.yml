@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+    branches:
+    - main
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+
+    - run: npm ci
+
+    - run: npm run build
+
+    - uses: mujo-code/puppeteer-headful@master
+      env:
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+        E2E_USER_NAME: ${{ secrets.E2E_USER_NAME }}
+        E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+      with:
+        args: npm test

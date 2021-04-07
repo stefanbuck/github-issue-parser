@@ -1,0 +1,11 @@
+name: 'GitHub Isue Parser'
+description: 'Turn GitHub Issues into a JSON schema'
+inputs:
+  template-path:
+    description: 'Path to the issue form template file'
+outputs:
+  jsonString:
+    description: 'JSON string'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
