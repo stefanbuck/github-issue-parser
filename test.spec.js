@@ -9,7 +9,7 @@ describe('End to End tests', () => {
     it('create issue', async () => {
         await createIssue('test-1.yml', 'test', {
             '#issue_form_contact': 'test@test.org',
-            'textarea[name="issue_form[what-happened]"]': 'something',
+            'textarea[name="issue_form[what-happened]"]': 'Something',
             'input[type="checkbox"][value="I agree"]': true,
             'input[type=radio][value="1.0.2 (Default)"]': true
         })
@@ -20,7 +20,7 @@ describe('End to End tests', () => {
     it('create issue text only', async () => {
         await createIssue('test-1.yml', 'test', {
             '#issue_form_contact': 'test@test.org',
-            'textarea[name="issue_form[what-happened]"]': 'something',
+            'textarea[name="issue_form[what-happened]"]': 'Something',
         })
 
         await assertActionResult();

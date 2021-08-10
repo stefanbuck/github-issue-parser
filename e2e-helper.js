@@ -26,6 +26,22 @@ async function performLogin() {
             await expect(error).toBeUndefined();
         }
     }
+
+
+    const currentUrl = await page.url();
+    if (currentUrl.includes('/sessions/two-factor')) {
+      if (!process.env.E2E_USER_2FA) {
+        // Account has 2fa enabled but E2E_USER_2FA is not set
+        process.exit(1);
+      }
+
+      await expect(page).toFill('#otp', process.env.E2E_USER_2FA);
+
+      await Promise.all([
+        page.waitForNavigation(),
+        expect(page).toClick('input[type=submit]', { value: 'Verify' }),
+      ]);
+    }
     
     console.log('Run E2E tests with authenticated user');
 };

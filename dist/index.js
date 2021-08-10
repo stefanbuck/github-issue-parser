@@ -4591,7 +4591,7 @@ function toValue(val) {
         return val;
     }
 
-    const value = val.toLowerCase().trim();
+    const value = val.trim();
     if (value === '_no response_') {
         return '';
     }

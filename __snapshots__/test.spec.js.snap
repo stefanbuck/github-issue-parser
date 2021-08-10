@@ -3,7 +3,7 @@
 exports[`End to End tests create issue 1`] = `
 "{
   \\"contact\\": \\"test@test.org\\",
-  \\"what_happened\\": \\"something\\",
+  \\"what_happened\\": \\"Something\\",
   \\"version\\": \\"1.0.2 (default)\\",
   \\"browsers\\": \\"\\",
   \\"relevant_log_output\\": \\"\\",
@@ -15,7 +15,7 @@ exports[`End to End tests create issue 1`] = `
 exports[`End to End tests create issue text only 1`] = `
 "{
   \\"contact\\": \\"test@test.org\\",
-  \\"what_happened\\": \\"something\\",
+  \\"what_happened\\": \\"Something\\",
   \\"version\\": \\"\\",
   \\"browsers\\": \\"\\",
   \\"relevant_log_output\\": \\"\\",
