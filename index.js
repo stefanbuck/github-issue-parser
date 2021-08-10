@@ -50,10 +50,10 @@ function toValue(val) {
 }
 
 result = body.split('###').filter(Boolean).map(line => {
-    return line.split('\n\n').filter(Boolean).map(item => {
+    return line.split(/\r?\n\r?\n/).filter(Boolean).map(item => {
         const line = item.trim();
         if (line.startsWith('- [')) {
-            return line.split('\n').map(check => {
+            return line.split(/\r?\n/).map(check => {
                 const field = check.replace(/- \[[X\s]\]/, '');
                 return [`${field}`, check.startsWith('- [X]')]
             })
