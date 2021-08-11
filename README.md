@@ -5,7 +5,7 @@ Use this action to convert issues into a unified JSON structure.
 ## Setup
 
 ```yml
-- uses: stefanbuck/github-issue-praser@main
+- uses: stefanbuck/github-issue-parser@main
   id: issue-parser
   with:
     template-path: .github/ISSUE_TEMPLATE/bug-report.yml
