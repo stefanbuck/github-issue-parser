@@ -54,8 +54,8 @@ result = body.split('###').filter(Boolean).map(line => {
         const line = item.trim();
         if (line.startsWith('- [')) {
             return line.split(/\r?\n/).map(check => {
-                const field = check.replace(/- \[[X\s]\]/, '');
-                return [`${field}`, check.startsWith('- [X]')]
+                const field = check.replace(/- \[[X\s]\]/i, '');
+                return [`${field}`, check.toUpperCase().startsWith('- [X]')]
             })
         }
 
