@@ -69,8 +69,8 @@ result = body.split('###').filter(Boolean).map(line => {
     }
 
     return [...prev, curr];
-}, []).map(([key, value]) => {
-    return [toKey(key), toValue(value)]
+}, []).map(([key, ...lines]) => {
+    return [toKey(key), toValue(lines.join("\n\n"))]
 })
 
 result.forEach(([key, value]) => {
