@@ -54,8 +54,8 @@ result = body.split('###').filter(Boolean).map(line => {
         const line = item.trim();
         if (line.startsWith('- [')) {
             return line.split(/\r?\n/).map(check => {
-                const field = check.replace(/- \[[X\s]\]/i, '');
-                return [`${field}`, check.toUpperCase().startsWith('- [X]')]
+                const field = check.replace(/- \[[X\s]\]\s+/i, '');
+                return [`${field}`, check.toUpperCase().startsWith('- [X] ')]
             })
         }
 
@@ -70,7 +70,11 @@ result = body.split('###').filter(Boolean).map(line => {
 
     return [...prev, curr];
 }, []).map(([key, ...lines]) => {
-    return [toKey(key), toValue(lines.join("\n\n"))]
+
+    const checkListValue = lines.find(line => Array.isArray(line));
+    const value = checkListValue ? toValue(checkListValue) : toValue(...lines)
+    
+    return [toKey(key), value];
 })
 
 result.forEach(([key, value]) => {
