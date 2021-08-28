@@ -4598,7 +4598,7 @@ function toValue(val) {
     return value;
 }
 
-result = body.split('###').filter(Boolean).map(line => {
+result = body.trim().split('###').filter(Boolean).map(line => {
     return line.split(/\r?\n\r?\n/).filter(Boolean).map(item => {
         const line = item.trim();
         if (line.startsWith('- [')) {
