@@ -4598,13 +4598,13 @@ function toValue(val) {
     return value;
 }
 
-result = body.split('###').filter(Boolean).map(line => {
+result = body.trim().split('###').filter(Boolean).map(line => {
     return line.split(/\r?\n\r?\n/).filter(Boolean).map(item => {
         const line = item.trim();
         if (line.startsWith('- [')) {
             return line.split(/\r?\n/).map(check => {
-                const field = check.replace(/- \[[X\s]\]/, '');
-                return [`${field}`, check.startsWith('- [X]')]
+                const field = check.replace(/- \[[X\s]\]\s+/i, '');
+                return [`${field}`, check.toUpperCase().startsWith('- [X] ')]
             })
         }
 
@@ -4618,8 +4618,12 @@ result = body.split('###').filter(Boolean).map(line => {
     }
 
     return [...prev, curr];
-}, []).map(([key, value]) => {
-    return [toKey(key), toValue(value)]
+}, []).map(([key, ...lines]) => {
+
+    const checkListValue = lines.find(line => Array.isArray(line));
+    const value = checkListValue ? toValue(checkListValue) : toValue(...lines)
+    
+    return [toKey(key), value];
 })
 
 result.forEach(([key, value]) => {
