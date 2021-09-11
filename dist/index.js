@@ -1,19 +1,170 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 932:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+// @ts-check
+
+const fs = __nccwpck_require__(747);
+const yaml = __nccwpck_require__(917);
+const core = __nccwpck_require__(186);
+
+/**
+ * @param {NodeJS.ProcessEnv} env
+ * @param {{issue: { body: string}}} eventPayload
+ * @param {fs} fs
+ * @param {core} core
+ */
+async function run(env, eventPayload, fs, core) {
+  let form = {};
+  try {
+    const templatePath = core.getInput("template-path");
+    if (templatePath) {
+      form = yaml.load(fs.readFileSync(templatePath, "utf8"));
+    }
+  } catch (err) {
+    core.error(err);
+  }
+
+  function getIDsFromIssueTemplate(formTemplate) {
+    if (!formTemplate.body) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      formTemplate.body
+        .map((item) => {
+          if (item.type === "markdown") {
+            return null;
+          }
+          return [item.attributes.label, item.id];
+        })
+        .filter(Boolean)
+    );
+  }
+
+  let result;
+  const body = eventPayload.issue.body;
+  const idMapping = getIDsFromIssueTemplate(form);
+
+  function toKey(str) {
+    if (idMapping[str]) {
+      return idMapping[str].replace(/-/g, "_");
+    }
+
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s]/gi, "")
+      .replace(/\s/g, "_");
+  }
+  function toValue(val) {
+    if (typeof val !== "string") {
+      return val;
+    }
+
+    const value = val.trim();
+    if (value.toLowerCase() === "_no response_") {
+      return "";
+    }
+    return value;
+  }
+
+  result = body
+    .trim()
+    .split("###")
+    .filter(Boolean)
+    .map((line) => {
+      return line
+        .split(/\r?\n\r?\n/)
+        .filter(Boolean)
+        .map((item) => {
+          const line = item.trim();
+          if (line.startsWith("- [")) {
+            return line.split(/\r?\n/).map((check) => {
+              const field = check.replace(/- \[[X\s]\]\s+/i, "");
+              return [`${field}`, check.toUpperCase().startsWith("- [X] ")];
+            });
+          }
+
+          return line;
+        });
+    })
+    .reduce((prev, curr) => {
+      if (Array.isArray(curr[1])) {
+        return [...prev, ...curr[1]];
+      }
+
+      return [...prev, curr];
+    }, [])
+    .map(([key, ...lines]) => {
+      const checkListValue = lines.find((line) => Array.isArray(line));
+      const value = checkListValue
+        ? toValue(checkListValue)
+        : toValue(...lines);
+
+      return [toKey(key), value];
+    });
+
+  result.forEach(([key, value]) => {
+    core.setOutput(`issueparser_${key}`, value);
+  });
+
+  function jsonStringify(json) {
+    return JSON.stringify(json, null, 2);
+  }
+
+  const json = Object.fromEntries(result);
+
+  fs.writeFileSync(
+    `${env.HOME}/issue-parser-result.json`,
+    jsonStringify(json),
+    "utf-8"
+  );
+  core.setOutput("jsonString", jsonStringify(json));
+}
+
+// We wrap the code in a `run` function to enable testing.
+// On GitHub Actions the `run` function is executed immediately.
+// `NODE_ENV` is set when running tests on GitHub Actions as part of CI.
+if (process.env.GITHUB_ACTIONS && process.env.NODE_ENV !== "test") {
+  const eventPayload = require(process.env.GITHUB_EVENT_PATH);
+
+  run(process.env, eventPayload, fs, core, yaml);
+}
+
+module.exports.run = run;
+
+
+/***/ }),
+
 /***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.issue = exports.issueCommand = void 0;
 const os = __importStar(__nccwpck_require__(87));
 const utils_1 = __nccwpck_require__(278);
 /**
@@ -92,6 +243,25 @@ function escapeProperty(s) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -101,14 +271,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 const command_1 = __nccwpck_require__(351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
@@ -175,7 +339,9 @@ function addPath(inputPath) {
 }
 exports.addPath = addPath;
 /**
- * Gets the value of an input.  The value is also trimmed.
+ * Gets the value of an input.
+ * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.
+ * Returns an empty string if the value is not defined.
  *
  * @param     name     name of the input to get
  * @param     options  optional. See InputOptions.
@@ -186,9 +352,49 @@ function getInput(name, options) {
     if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
     }
+    if (options && options.trimWhitespace === false) {
+        return val;
+    }
     return val.trim();
 }
 exports.getInput = getInput;
+/**
+ * Gets the values of an multiline input.  Each value is also trimmed.
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string[]
+ *
+ */
+function getMultilineInput(name, options) {
+    const inputs = getInput(name, options)
+        .split('\n')
+        .filter(x => x !== '');
+    return inputs;
+}
+exports.getMultilineInput = getMultilineInput;
+/**
+ * Gets the input value of the boolean type in the YAML 1.2 "core schema" specification.
+ * Support boolean input list: `true | True | TRUE | false | False | FALSE` .
+ * The return value is also in boolean type.
+ * ref: https://yaml.org/spec/1.2/spec.html#id2804923
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   boolean
+ */
+function getBooleanInput(name, options) {
+    const trueValue = ['true', 'True', 'TRUE'];
+    const falseValue = ['false', 'False', 'FALSE'];
+    const val = getInput(name, options);
+    if (trueValue.includes(val))
+        return true;
+    if (falseValue.includes(val))
+        return false;
+    throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${name}\n` +
+        `Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
+}
+exports.getBooleanInput = getBooleanInput;
 /**
  * Sets the value of an output.
  *
@@ -197,6 +403,7 @@ exports.getInput = getInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    process.stdout.write(os.EOL);
     command_1.issueCommand('set-output', { name }, value);
 }
 exports.setOutput = setOutput;
@@ -243,19 +450,30 @@ exports.debug = debug;
 /**
  * Adds an error issue
  * @param message error issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
+function error(message, properties = {}) {
+    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.error = error;
 /**
- * Adds an warning issue
+ * Adds a warning issue
  * @param message warning issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+function warning(message, properties = {}) {
+    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.warning = warning;
+/**
+ * Adds a notice issue
+ * @param message notice issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
+ */
+function notice(message, properties = {}) {
+    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+exports.notice = notice;
 /**
  * Writes info to log with console.log.
  * @param message info message
@@ -338,14 +556,27 @@ exports.getState = getState;
 "use strict";
 
 // For internal use, subject to change.
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const fs = __importStar(__nccwpck_require__(747));
@@ -376,6 +607,7 @@ exports.issueCommand = issueCommand;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toCommandProperties = exports.toCommandValue = void 0;
 /**
  * Sanitizes an input into a string so it can be passed into issueCommand safely
  * @param input input to sanitize into a string
@@ -390,6 +622,25 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+exports.toCommandProperties = toCommandProperties;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -423,6 +674,23 @@ module.exports.load                = loader.load;
 module.exports.loadAll             = loader.loadAll;
 module.exports.dump                = dumper.dump;
 module.exports.YAMLException = __nccwpck_require__(179);
+
+// Re-export all types in case user wants to create custom schema
+module.exports.types = {
+  binary:    __nccwpck_require__(900),
+  float:     __nccwpck_require__(705),
+  map:       __nccwpck_require__(150),
+  null:      __nccwpck_require__(721),
+  pairs:     __nccwpck_require__(860),
+  set:       __nccwpck_require__(548),
+  timestamp: __nccwpck_require__(212),
+  bool:      __nccwpck_require__(993),
+  int:       __nccwpck_require__(615),
+  merge:     __nccwpck_require__(104),
+  omap:      __nccwpck_require__(46),
+  seq:       __nccwpck_require__(283),
+  str:       __nccwpck_require__(619)
+};
 
 // Removed functions from JS-YAML 3.0.x
 module.exports.safeLoad            = renamed('safeLoad', 'load');
@@ -3282,25 +3550,25 @@ var YAMLException = __nccwpck_require__(179);
 var Type          = __nccwpck_require__(73);
 
 
-function compileList(schema, name, result) {
-  var exclude = [];
+function compileList(schema, name) {
+  var result = [];
 
   schema[name].forEach(function (currentType) {
+    var newIndex = result.length;
+
     result.forEach(function (previousType, previousIndex) {
       if (previousType.tag === currentType.tag &&
           previousType.kind === currentType.kind &&
           previousType.multi === currentType.multi) {
 
-        exclude.push(previousIndex);
+        newIndex = previousIndex;
       }
     });
 
-    result.push(currentType);
+    result[newIndex] = currentType;
   });
 
-  return result.filter(function (type, index) {
-    return exclude.indexOf(index) === -1;
-  });
+  return result;
 }
 
 
@@ -3386,8 +3654,8 @@ Schema.prototype.extend = function extend(definition) {
   result.implicit = (this.implicit || []).concat(implicit);
   result.explicit = (this.explicit || []).concat(explicit);
 
-  result.compiledImplicit = compileList(result, 'implicit', []);
-  result.compiledExplicit = compileList(result, 'explicit', []);
+  result.compiledImplicit = compileList(result, 'implicit');
+  result.compiledExplicit = compileList(result, 'explicit');
   result.compiledTypeMap  = compileMap(result.compiledImplicit, result.compiledExplicit);
 
   return result;
@@ -3660,6 +3928,7 @@ function Type(tag, options) {
   });
 
   // TODO: Add tag format check.
+  this.options       = options; // keep original options in case user wants to extend this type later
   this.tag           = tag;
   this.kind          = options['kind']          || null;
   this.resolve       = options['resolve']       || function () { return true; };
@@ -4544,104 +4813,12 @@ module.exports = require("path");;
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-const fs = __nccwpck_require__(747);
-const yaml = __nccwpck_require__(917);
-const core = __nccwpck_require__(186);
-const eventPayload = require(process.env.GITHUB_EVENT_PATH)
-
-let form = {};
-try {
-  const templatePath = core.getInput('template-path');
-  if (templatePath) {
-      form = yaml.load(fs.readFileSync(templatePath, 'utf8'));
-  }
-} catch (err) {
-    core.error(err)
-}
-
-function getIDsFromIssueTemplate(formTemplate) {
-    if (!formTemplate.body) {
-        return {}
-    }
-
-    return  Object.fromEntries(formTemplate.body.map(item => {
-        if (item.type === 'markdown') {
-            return null;
-        }
-        return [item.attributes.label, item.id]
-    }).filter(Boolean));
-}
-
-let result;
-const body = eventPayload.issue.body;
-const idMapping = getIDsFromIssueTemplate(form)
-
-function toKey(str) {
-    if (idMapping[str]) {
-        return idMapping[str].replace(/-/g,'_');
-    }
-
-    return str.toLowerCase().trim().replace(/[^\w\s]/gi,'').replace(/\s/g,'_');
-}
-function toValue(val) {
-    if (typeof val !== 'string') {
-        return val;
-    }
-
-    const value = val.trim();
-    if (value.toLowerCase() === '_no response_') {
-        return '';
-    }
-    return value;
-}
-
-result = body.trim().split('###').filter(Boolean).map(line => {
-    return line.split(/\r?\n\r?\n/).filter(Boolean).map(item => {
-        const line = item.trim();
-        if (line.startsWith('- [')) {
-            return line.split(/\r?\n/).map(check => {
-                const field = check.replace(/- \[[X\s]\]\s+/i, '');
-                return [`${field}`, check.toUpperCase().startsWith('- [X] ')]
-            })
-        }
-
-        return line;
-    })
-})
-.reduce((prev, curr) => {
-
-    if (Array.isArray(curr[1])) {
-        return [...prev, ...curr[1]];
-    }
-
-    return [...prev, curr];
-}, []).map(([key, ...lines]) => {
-
-    const checkListValue = lines.find(line => Array.isArray(line));
-    const value = checkListValue ? toValue(checkListValue) : toValue(...lines)
-    
-    return [toKey(key), value];
-})
-
-result.forEach(([key, value]) => {
-    core.setOutput(`issueparser_${key}`, value);
-})
-
-function jsonStringify(json) {
-	return JSON.stringify(json);
-}
-
-
-const json = Object.fromEntries(result)
-
-fs.writeFileSync(`${process.env.HOME}/issue-parser-result.json`, jsonStringify(json), 'utf-8');
-core.setOutput('jsonString', jsonStringify(json));
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(932);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
