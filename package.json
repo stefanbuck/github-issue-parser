@@ -1,5 +1,6 @@
 {
   "name": "github-issue-parser",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stefanbuck/github-issue-praser.git"
+    "url": "git+https://github.com/stefanbuck/github-issue-parser.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/stefanbuck/github-issue-praser/issues"
+    "url": "https://github.com/stefanbuck/github-issue-parser/issues"
   },
-  "homepage": "https://github.com/stefanbuck/github-issue-praser#readme",
+  "homepage": "https://github.com/stefanbuck/github-issue-parser#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "js-yaml": "^4.0.0"
