@@ -1,5 +1,5 @@
-name: 'GitHub Isue Parser'
-description: 'Turn GitHub Issues into a JSON schema'
+name: 'GitHub Issue Parser'
+description: 'Turn a GitHub Issues body into a JSON object'
 inputs:
   template-path:
     description: 'Path to the issue form template file'
