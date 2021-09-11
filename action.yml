@@ -1,5 +1,8 @@
 name: 'GitHub Issue Parser'
-description: 'Turn a GitHub Issues body into a JSON object'
+description: 'Use this action to convert issues into a unified JSON structure.'
+branding:
+  icon: "check-square"
+  color: green
 inputs:
   template-path:
     description: 'Path to the issue form template file'
