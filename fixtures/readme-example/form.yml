@@ -1,0 +1,40 @@
+name: Bug
+description: Something is broken
+
+title: "Order Pizza"
+
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Your contact details
+    validations:
+      required: true
+
+  - type: input
+    id: what_happened
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+    validations:
+      required: true
+
+  - type: input
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: What else?
+      options:
+        - label: Never give up
+        - label: Hot Dog is a Sandwich
