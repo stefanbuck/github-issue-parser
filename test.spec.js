@@ -1,111 +1,62 @@
+const { readFileSync } = require("fs");
 
-const {performLogin, createIssue, assertActionResult} = require('./e2e-helper.js');
+const { run } = require(".");
 
-describe('End to End tests', () => {
-    beforeAll(async () => {
-        await performLogin();
-    })
-
-    it('create issue', async () => {
-        await createIssue('test-1.yml', 'test', {
-            '#issue_form_contact': 'test@test.org',
-            'textarea[name="issue_form[what-happened]"]': 'Something',
-            'input[type="checkbox"][value="I agree"]': true,
-            'input[type=radio][value="1.0.2 (Default)"]': true
-        })
-
-        await assertActionResult();
-    });
-
-    it('create issue text only', async () => {
-        await createIssue('test-1.yml', 'test', {
-            '#issue_form_contact': 'test@test.org',
-            'textarea[name="issue_form[what-happened]"]': 'Something',
-        })
-
-        await assertActionResult();
-    });
+describe("Smoke test", () => {
+  it("exports a run function", () => {
+    expect(run).toBeDefined();
+    expect(typeof run).toBe("function");
+  });
 });
 
-// describe('End to End tests', () => {
-//     async function performLogin() {
-//         if (!process.env.E2E_USER_NAME || !process.env.E2E_USER_PASSWORD) {
-//             process.exit(1);
-//             return;
-//         }
-        
-//         console.log('Perform login ...');
-        
-//         await page.goto('https://github.com/login');
-//         await expect(page).toFill('#login_field', process.env.E2E_USER_NAME);
-//         await expect(page).toFill('#password', process.env.E2E_USER_PASSWORD);
-     
-//         await Promise.all([
-//              page.waitForNavigation(),
-//              expect(page).toClick('input[type=submit]', { value: 'Sign in' })
-//         ]); 
-        
-//         try {
-//             const authError = await page.$eval('#login .flash-error', (el) =>
-//             el.textContent.trim(),
-//             );
-//             throw new Error(authError);
-//         } catch (error) {
-//             if (!error.message.includes('failed to find element matching selector')) {
-//                 await expect(error).toBeUndefined();
-//             }
-//         }
-        
-//         console.log('Run E2E tests with authenticated user');
-//     };
+describe("readme example", () => {
+  it("parses the issue body without a template", () => {
+    const expectedOutput = require("./fixtures/readme-example/expected.json");
+    const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
-//     beforeAll(async () => {
-//         await performLogin();
-//     })
-  
-//       async function fillForm(data) {
-//         for(const [selector, value] of Object.entries(data)) {
-//             await page.$eval(selector, (el, formValue) => {
-//                 if (['text', 'textarea'].includes(el.type)) {
-//                     el.value = formValue
-//                 } else if (['radio', 'checkbox'].includes(el.type)) {
-//                     el.click();
-//                 }
-//             }, value);            
-//         }      
-//       }
-//       async function createIssue(template, title, data) {
-//         await page.goto(`https://github.com/stefanbuck/template/issues/new?template=${template}&title=${title}`);
-//         await fillForm(data);
-//       }
+    // mock ENV
+    const env = {
+      HOME: "<home path>",
+    };
 
-//      async function assertActionResult() {
-//         await expect(page).toClick('button', { text: 'Submit new issue' })
-//         await page.waitForSelector('.State.State--closed', {timeout:0});
-        
-//         await page.waitForSelector('.js-comment-body pre')
+    // mock event payload
+    const eventPayload = require("./fixtures/readme-example/issue");
 
-//         const tweetHandle = await page.$('.js-comment-body pre');
-//         expect(await tweetHandle.evaluate(node => node.innerText)).toMatchSnapshot();
-//       }
+    // mock fs
+    const fs = {
+      readFileSync(path, encoding) {
+        expect(path).toBe("<template-path>");
+        expect(encoding).toBe("utf8");
+        return readFileSync("fixtures/readme-example/form.yml", "utf-8");
+      },
+      writeFileSync(path, content) {
+        expect(path).toBe("<home path>/issue-parser-result.json");
+        expect(content).toBe(expectedOutputJson);
+      },
+    };
 
-//     it('create issue', async () => {
-//         await createIssue('test-1.yml', 'test', {
-//             '#issue_form_contact': 'test@test.org',
-//             'textarea[name="issue_form[what-happened]"]': 'something',
-//             'input[type="checkbox"][value="I agree"]': true,
-//             'input[type=radio][value="1.0.2 (Default)"]': true
-//         })
+    // mock core
+    const core = {
+      getInput(inputName) {
+        expect(inputName).toBe("template-path");
+        return "<template-path>";
+      },
+      setOutput(outputName, outputValue) {
+        if (outputName === "jsonString") {
+          expect(outputValue).toBe(expectedOutputJson);
+          return;
+        }
 
-//         await assertActionResult();
-//     });
-  
-//     it('creat issue with text only', async () => {
-//         await createIssue('test-1.yml', 'test', {
-//             '#issue_form_contact': 'test@test.org',
-//             'textarea[name="issue_form[what-happened]"]': 'something',
-//         })
+        if (outputName.startsWith("issueparser_")) {
+          const key = outputName.substr("issueparser_".length);
+          expect(Object.keys(expectedOutput)).toContain(key);
 
-//         await assertActionResult();
-//     });
-//   });
+          expect(outputValue).toBe(expectedOutput[key]);
+          return;
+        }
+      },
+    };
+
+    run(env, eventPayload, fs, core);
+  });
+});
