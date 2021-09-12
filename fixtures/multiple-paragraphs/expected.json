@@ -1,3 +1,4 @@
 {
-  "textarea": "1st paragraph\n\n2nd paragraph"
+  "textarea_one": "1st paragraph\n\n2nd paragraph",
+  "textarea_two": "1st paragraph\n2nd paragraph"
 }
