@@ -99,3 +99,17 @@ The actions output will be
   "hot_dog_is_a_sandwich": false
 }
 ```
+
+## Real-world examples
+
+### Basic example
+
+Ever wanted to order a pizza from a GitHub Issue? In this basic example, the order is processed and appended to the README using this Action.
+
+[See workflow](https://github.com/stefanbuck/ristorante/blob/main/.github/workflows/order.yml)
+
+### Awesome list
+
+The [awesome-browser-extensions-for-github](https://github.com/stefanbuck/awesome-browser-extensions-for-github) repository is using this Action to make it super easy to submit a new extension just by filling a new GitHub Issue. The workflow runs and turns the issue into a code contribution once the label `merge` has been added.
+
+[See workflow](https://github.com/stefanbuck/awesome-browser-extensions-for-github/blob/main/.github/workflows/handle-submission.yml)
