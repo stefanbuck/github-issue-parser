@@ -53,12 +53,13 @@ async function run(env, eventPayload, fs, core) {
       .replace(/[^\w\s]/gi, "")
       .replace(/\s/g, "_");
   }
-  function toValue(val) {
-    if (typeof val !== "string") {
-      return val;
+  function toValue(input, ...extraLines) {
+    if (typeof input !== "string") {
+      return input;
     }
 
-    const value = val.trim();
+    const value = [input, ...extraLines].join("\n\n").trim();
+
     if (value.toLowerCase() === "_no response_") {
       return "";
     }
