@@ -44,7 +44,7 @@ async function run(env, eventPayload, fs, core) {
 
   function toKey(str) {
     if (idMapping[str]) {
-      return idMapping[str].replace(/-/g, "_");
+      return idMapping[str];
     }
 
     return str
