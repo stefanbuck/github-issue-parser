@@ -10,7 +10,7 @@ Use this action to convert issues into a unified JSON structure.
   with:
     template-path: .github/ISSUE_TEMPLATE/bug-report.yml
 
-- run: echo ${{ toJSON(steps.issue-parser.outputs.jsonString) }} > bug-details.json
+- run: echo '${{ steps.issue-parser.outputs.jsonString }}' > bug-details.json
 ```
 
 `template-path` is optional and meant to be used with Issue Forms.
