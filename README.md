@@ -1,6 +1,6 @@
 # GitHub Issue Parser
 
-Use this action to convert issues into a unified JSON structure.
+Use this action to convert issues into a unified JSON structure. 
 
 ## Setup
 
@@ -99,6 +99,10 @@ The actions output will be
   "hot_dog_is_a_sandwich": false
 }
 ```
+
+
+Want to learn more about this concept? Check out the [Codeless Contributions with GitHub Issue Forms](https://stefanbuck.com/blog/codeless-contributions-with-github-issue-forms) post on my blog.
+
 
 ## Real-world examples
 
