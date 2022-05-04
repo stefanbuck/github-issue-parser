@@ -1,6 +1,6 @@
 # GitHub Issue Parser
 
-Use this action to convert issues into a unified JSON structure. 
+Use this action to convert issues into a unified JSON structure.
 
 ## Setup
 
@@ -55,6 +55,7 @@ body:
       required: true
 
   - type: checkboxes
+    id: what_else
     attributes:
       label: What else?
       options:
@@ -95,8 +96,7 @@ The actions output will be
   "what_happened": "A bug happened!",
   "version": "1.0.0",
   "browsers": "Chrome, Safari",
-  "never_give_up": true,
-  "hot_dog_is_a_sandwich": false
+  "what_else": ["Never give up"]
 }
 ```
 
