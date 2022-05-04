@@ -123,7 +123,7 @@ async function run(env, eventPayload, fs, core) {
           const line = item.trim();
 
           if (line.startsWith("- [")) {
-            const optionLine = line.split(/\r?\n/).map((check) => {
+            return line.split(/\r?\n/).map((check) => {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
               const previousIndex = index === 0 ? index : index - 1;
               const key = arr[previousIndex].trim();
@@ -132,8 +132,6 @@ async function run(env, eventPayload, fs, core) {
               }
               return [key];
             });
-
-            return optionLine;
           }
 
           return line;
