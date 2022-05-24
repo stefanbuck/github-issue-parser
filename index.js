@@ -153,7 +153,9 @@ async function run(env, eventPayload, fs, core) {
   });
 
   result = toObject(result);
-  core.setOutput(`issueparser`, result);
+  Object.entries(result).forEach(([key, value]) => {
+    core.setOutput(`issueparser_${key}`, Array.isArray(value) ? value.join(',') : value);
+  })
 
   function jsonStringify(json) {
     return JSON.stringify(json, null, 2);
