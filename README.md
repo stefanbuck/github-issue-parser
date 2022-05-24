@@ -1,6 +1,6 @@
 # GitHub Issue Parser
 
-Use this action to convert issues into a unified JSON structure.
+Use this action to convert issues into a unified JSON structure. Read the [Codeless Contributions with GitHub Issue Forms](https://stefanbuck.com/blog/codeless-contributions-with-github-issue-forms) post on my blog.
 
 ## Setup
 
