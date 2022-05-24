@@ -113,7 +113,7 @@ async function run(env, eventPayload, fs, core) {
   const json = Object.fromEntries(result);
 
   fs.writeFileSync(
-    `${env.HOME}/issue-parser-result.json`,
+    `${env.USERPROFILE || env.HOME}/issue-parser-result.json`,
     jsonStringify(json),
     "utf-8"
   );
