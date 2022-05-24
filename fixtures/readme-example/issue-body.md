@@ -14,7 +14,18 @@ A bug happened!
 
 Chrome, Safari
 
-### Code of Conduct
+### What else?
 
 - [x] Never give up
 - [ ] Hot Dog is a Sandwich
+
+### And with that?
+
+- [ ] Never give up
+- [x] Hot Dog is a Sandwich
+- [x] Another item
+
+### Checkbox without an id?
+
+- [ ] IDs are great
+- [ ] IDs are bad
