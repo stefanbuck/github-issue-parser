@@ -3,6 +3,7 @@
   "what_happened": "A bug happened!",
   "version": "1.0.0",
   "browsers": "Chrome, Safari",
-  "never_give_up": true,
-  "hot_dog_is_a_sandwich": false
+  "anything_else": ["Never give up"],
+  "second_anything_else": ["Hot Dog is a Sandwich", "Another item"],
+  "checkbox_without_an_id": []
 }

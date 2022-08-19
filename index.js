@@ -32,7 +32,24 @@ async function run(env, eventPayload, fs, core) {
           if (item.type === "markdown") {
             return null;
           }
-          return [item.attributes.label, item.id];
+          return [item.attributes.label, item.id, item.type];
+        })
+        .filter(Boolean)
+    );
+  }
+
+  function getIDTypesFromIssueTemplate(formTemplate) {
+    if (!formTemplate.body) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      formTemplate.body
+        .map((item) => {
+          if (item.type === "markdown") {
+            return null;
+          }
+          return [toKey(item.attributes.label), item.type];
         })
         .filter(Boolean)
     );
@@ -41,6 +58,7 @@ async function run(env, eventPayload, fs, core) {
   let result;
   const body = eventPayload.issue.body || '';
   const idMapping = getIDsFromIssueTemplate(form);
+  const idTypes = getIDTypesFromIssueTemplate(form);
 
   function toKey(str) {
     if (idMapping[str]) {
@@ -66,6 +84,33 @@ async function run(env, eventPayload, fs, core) {
     return value;
   }
 
+  //toObject merges checkbox results in an array and spits out correctly formatted object
+  function toObject(array) {
+    let result = {};
+
+    array.forEach((item) => {
+      const key = item && item[0];
+      const value = item && item[1];
+
+      if (key in result) {
+        const content = result[key];
+
+        if (value !== undefined) {
+          result[key] = content.concat(value);
+        }
+        return;
+      }
+
+      if (idTypes[key] == "checkboxes") {
+        result[key] = value === undefined ? [] : [value];
+      } else {
+        result[key] = value;
+      }
+    });
+
+    return result
+  }
+
   result = body
     .trim()
     .split("###")
@@ -74,12 +119,18 @@ async function run(env, eventPayload, fs, core) {
       return line
         .split(/\r?\n\r?\n/)
         .filter(Boolean)
-        .map((item) => {
+        .map((item, index, arr) => {
           const line = item.trim();
+
           if (line.startsWith("- [")) {
             return line.split(/\r?\n/).map((check) => {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
-              return [`${field}`, check.toUpperCase().startsWith("- [X] ")];
+              const previousIndex = index === 0 ? index : index - 1;
+              const key = arr[previousIndex].trim();
+              if (check.toUpperCase().startsWith("- [X] ")) {
+                return [key, field];
+              }
+              return [key];
             });
           }
 
@@ -92,32 +143,30 @@ async function run(env, eventPayload, fs, core) {
       }
 
       return [...prev, curr];
-    }, [])
-    .map(([key, ...lines]) => {
-      const checkListValue = lines.find((line) => Array.isArray(line));
-      const value = checkListValue
-        ? toValue(checkListValue)
-        : toValue(...lines);
+    }, []);
 
-      return [toKey(key), value];
-    });
+  result = result.map(([key, ...lines]) => {
+    const checkListValue = lines.find((line) => Array.isArray(line));
+    const value = checkListValue ? toValue(checkListValue) : toValue(...lines);
 
-  result.forEach(([key, value]) => {
-    core.setOutput(`issueparser_${key}`, value);
+    return [toKey(key), value];
   });
+
+  result = toObject(result);
+  Object.entries(result).forEach(([key, value]) => {
+    core.setOutput(`issueparser_${key}`, Array.isArray(value) ? value.join(',') : value);
+  })
 
   function jsonStringify(json) {
     return JSON.stringify(json, null, 2);
   }
 
-  const json = Object.fromEntries(result);
-
   fs.writeFileSync(
     `${env.USERPROFILE || env.HOME}/issue-parser-result.json`,
-    jsonStringify(json),
+    jsonStringify(result),
     "utf-8"
   );
-  core.setOutput("jsonString", jsonStringify(json));
+  core.setOutput("jsonString", jsonStringify(result));
 }
 
 // We wrap the code in a `run` function to enable testing.
