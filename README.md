@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/stefanbuck/github-issue-parser.svg)](https://github.com/stefanbuck/github-issue-parser/releases) [![snyk](https://snyk.io/test/github/stefanbuck/github-issue-parser/badge.svg?targetFile=package.json)](https://snyk.io/test/github/stefanbuck/github-issue-parser?targetFile=package.json)
 
-Use this action to convert issues into a unified JSON structure. 
+Use this action to convert issues into a unified JSON structure. Read the [Codeless Contributions with GitHub Issue Forms](https://stefanbuck.com/blog/codeless-contributions-with-github-issue-forms) post on my blog.
 
 ## Setup
 
@@ -59,6 +59,7 @@ body:
       required: true
 
   - type: checkboxes
+    id: what_else
     attributes:
       label: What else?
       options:
@@ -99,8 +100,7 @@ The actions output will be
   "what_happened": "A bug happened!",
   "version": "1.0.0",
   "browsers": "Chrome, Safari",
-  "never_give_up": true,
-  "hot_dog_is_a_sandwich": false
+  "what_else": ["Never give up"]
 }
 ```
 
