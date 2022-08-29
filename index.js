@@ -39,7 +39,7 @@ async function run(env, eventPayload, fs, core) {
   }
 
   let result;
-  const body = eventPayload.issue.body;
+  const body = eventPayload.issue.body || '';
   const idMapping = getIDsFromIssueTemplate(form);
 
   function toKey(str) {
