@@ -119,3 +119,9 @@ Ever wanted to order a pizza from a GitHub Issue? In this basic example, the ord
 The [awesome-browser-extensions-for-github](https://github.com/stefanbuck/awesome-browser-extensions-for-github) repository is using this Action to make it super easy to submit a new extension just by filling a new GitHub Issue. The workflow runs and turns the issue into a code contribution once the label `merge` has been added.
 
 [See workflow](https://github.com/stefanbuck/awesome-browser-extensions-for-github/blob/main/.github/workflows/handle-submission.yml)
+
+### Advanced Issue Labeler
+
+The [advanced-issue-labeler](https://github.com/redhat-plumbers-in-action/advanced-issue-labeler) GitHub Action enables policy-based issue labeling. With the power of GitHub Issue forms and `github-issue-parser`, it provides a secure way to label issues to help with the triaging process automatically.
+
+[How to use it](https://github.com/redhat-plumbers-in-action/advanced-issue-labeler#usage)
