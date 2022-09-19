@@ -41,6 +41,45 @@ it("readme example", () => {
   run(env, eventPayload, fs, core);
   expect(core.getInput).toHaveBeenCalledWith('template-path')
   expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_favorite_dish', 'Pizza')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_favorite_color', 'Red,Blue')
+  expect(core.setOutput.mock.calls.length).toBe(3)
+});
+
+it("full example", () => {
+  const expectedOutput = require("./fixtures/full-example/expected.json");
+  const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
+
+  // mock ENV
+  const env = {
+    HOME: "<home path>",
+  };
+
+  // mock event payload
+  const eventPayload = require("./fixtures/full-example/issue");
+
+  // mock fs
+  const fs = {
+    readFileSync(path, encoding) {
+      expect(path).toBe("<template-path>");
+      expect(encoding).toBe("utf8");
+      return readFileSync("fixtures/full-example/form.yml", "utf-8");
+    },
+    writeFileSync(path, content) {
+      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(content).toBe(expectedOutputJson);
+    },
+  };
+
+  // mock core
+  const core = {
+    getInput: jest.fn(() => '<template-path>'),
+    setOutput: jest.fn(),
+  };
+
+  run(env, eventPayload, fs, core);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
   expect(core.setOutput).toHaveBeenCalledWith('issueparser_contact', 'me@me.com')
   expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_happened', 'A bug happened!')
   expect(core.setOutput).toHaveBeenCalledWith('issueparser_version', '1.0.0')
@@ -101,7 +140,7 @@ it("blank", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/blank/issue");
+  const eventPayload = null;
 
   // mock fs
   const fs = {
