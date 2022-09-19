@@ -1,31 +1,9 @@
-### Your contact details
+### What's your favorite dish?
 
-me@me.com
+Pizza
 
-### What happened?
+### What's your preferred color?
 
-A bug happened!
-
-### Version
-
-1.0.0
-
-### What browsers are you seeing the problem on?
-
-Chrome, Safari
-
-### What else?
-
-- [x] Never give up
-- [ ] Hot Dog is a Sandwich
-
-### And with that?
-
-- [ ] Never give up
-- [x] Hot Dog is a Sandwich
-- [x] Another item
-
-### Checkbox without an id?
-
-- [ ] IDs are great
-- [ ] IDs are bad
+- [x] Red
+- [ ] Green
+- [x] Blue

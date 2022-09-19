@@ -1,9 +1,4 @@
 {
-  "contact": "me@me.com",
-  "what_happened": "A bug happened!",
-  "version": "1.0.0",
-  "browsers": "Chrome, Safari",
-  "anything_else": ["Never give up"],
-  "second_anything_else": ["Hot Dog is a Sandwich", "Another item"],
-  "checkbox_without_an_id": []
+  "favorite_dish": "Pizza",
+  "favorite_color": ["Red", "Blue"]
 }
