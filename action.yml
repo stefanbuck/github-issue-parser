@@ -6,9 +6,12 @@ branding:
 inputs:
   template-path:
     description: 'Path to the issue form template file'
+  issue-body:
+    required: true
+    description: 'Issue body to parse'
 outputs:
   jsonString:
     description: 'JSON string'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

@@ -1,0 +1,52 @@
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Your contact details
+    validations:
+      required: true
+
+  - type: input
+    id: what_happened
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+    validations:
+      required: true
+
+  - type: input
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: anything_else
+    attributes:
+      label: What else?
+      options:
+        - label: Never give up
+        - label: Hot Dog is a Sandwich
+
+  - type: checkboxes
+    id: second_anything_else
+    attributes:
+      label: And with that?
+      options:
+        - label: Never give up
+        - label: Hot Dog is a Sandwich
+        - label: Another item
+
+  - type: checkboxes
+    attributes:
+      label: Checkbox without an id?
+      options:
+        - label: IDs are great
+        - label: IDs are bad

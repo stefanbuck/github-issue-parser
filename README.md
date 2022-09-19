@@ -5,103 +5,85 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
 ## Setup
 
 ```yml
-- uses: stefanbuck/github-issue-parser@v2
+- uses: stefanbuck/github-issue-parser@v3
   id: issue-parser
   with:
-    template-path: .github/ISSUE_TEMPLATE/bug-report.yml
+    issue-body: ${{ github.event.issue.body }} # required
+    template-path: .github/ISSUE_TEMPLATE/bug-report.yml # optional but recommended
 
-- run: echo '${{ steps.issue-parser.outputs.jsonString }}' > bug-details.json
+- run: cat ${HOME}/issue-parser-result.json
 
-- run: echo '${{ steps.issue-parser.outputs.issueparser_your_contact_details }}'
+- run: echo $FAVORITE_DISH
+  env:
+    FAVORITE_DISH: ${{ steps.issue-parser.outputs.issueparser_favorite_dish }}
 ```
-
-`template-path` is optional and meant to be used with Issue Forms.
 
 ## Example
 
 Given an issue form
 
 ```yml
-name: Bug
-description: Something is broken
-
-title: "Order Pizza"
-
 body:
   - type: input
-    id: contact
+    id: favorite_dish
     attributes:
-      label: Your contact details
-    validations:
-      required: true
-
-  - type: input
-    id: what_happened
-    attributes:
-      label: What happened?
-    validations:
-      required: true
-
-  - type: input
-    id: version
-    attributes:
-      label: Version
-    validations:
-      required: true
-
-  - type: input
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
+      label: What's your favorite dish?
     validations:
       required: true
 
   - type: checkboxes
-    id: what_else
+    id: favorite_color
     attributes:
-      label: What else?
+      label:  What's your preferred color?
       options:
-        - label: Never give up
-        - label: Hot Dog is a Sandwich
+        - label: Red
+        - label: Green
+        - label: Blue
 ```
 
 And an issue body
 
 ```md
-### Your contact details
+### What's your favorite dish?
 
-me@me.com
+Pizza
 
-### What happened?
+### What's your preferred color?
 
-A bug happened!
-
-### Version
-
-1.0.0
-
-### What browsers are you seeing the problem on?
-
-Chrome, Safari
-
-### What else?
-
-- [x] Never give up
-- [ ] Hot Dog is a Sandwich
+- [x] Red
+- [ ] Green
+- [x] Blue
 ```
 
 The actions output will be
 
 ```json
 {
-  "contact": "me@me.com",
-  "what_happened": "A bug happened!",
-  "version": "1.0.0",
-  "browsers": "Chrome, Safari",
-  "what_else": ["Never give up"]
+  "favorite_dish": "Pizza",
+  "favorite_color": ["Red", "Blue"]
 }
 ```
 
+## Action outputs
+
+- `jsonString` - The entire output
+- `issueparser_<field_id>` - Access individual values
+
+
+Please take a look at GitHub's [Good practices for mitigating script injection attacks](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#good-practices-for-mitigating-script-injection-attacks) when using inline scripts. The examples blow are safe because they use intermediate environment variable as suggested by GitHub.
+
+```yaml
+- run: echo $JSON_STRING > output.json
+  env:
+    JSON_STRING: ${{ steps.issue-parser.outputs.jsonString }}
+```
+
+
+```yaml
+- run: echo $FAV_DISH
+  env:
+    FAV_DISH: ${{ steps.issue-parser.outputs.issueparser_favorite_dish }}
+```
 
 Want to learn more about this concept? Check out the [Codeless Contributions with GitHub Issue Forms](https://stefanbuck.com/blog/codeless-contributions-with-github-issue-forms) post on my blog.
 
