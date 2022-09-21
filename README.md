@@ -1,5 +1,7 @@
 # GitHub Issue Parser
 
+[![GitHub release](https://img.shields.io/github/release/stefanbuck/github-issue-parser.svg)](https://github.com/stefanbuck/github-issue-parser/releases) [![snyk](https://snyk.io/test/github/stefanbuck/github-issue-parser/badge.svg?targetFile=package.json)](https://snyk.io/test/github/stefanbuck/github-issue-parser?targetFile=package.json)
+
 Use this action to convert issues into a unified JSON structure. 
 
 ## Setup
