@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/stefanbuck/github-issue-parser#readme",
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.0",
     "js-yaml": "^4.0.0"
   },
   "devDependencies": {
