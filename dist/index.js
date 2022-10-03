@@ -130,6 +130,8 @@ async function run(env, eventPayload, fs, core) {
     return JSON.stringify(json, null, 2);
   }
 
+  log(`result: ${result}`)
+
   const json = Object.fromEntries(result);
 
   log(`json: ${jsonStringify(json)}`);
