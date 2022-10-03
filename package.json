@@ -1,8 +1,8 @@
 {
-  "name": "github-issue-parser",
+  "name": "issue-template-parser",
   "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "Use this action to convert issues into a unified JSON structure",
   "main": "index.js",
   "scripts": {
     "build": "ncc build",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stefanbuck/github-issue-parser.git"
+    "url": "git+https://github.com/GrantBirki/issue-template-parser.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/stefanbuck/github-issue-parser/issues"
+    "url": "https://github.com/GrantBirki/issue-template-parser/issues"
   },
-  "homepage": "https://github.com/stefanbuck/github-issue-parser#readme",
+  "homepage": "https://github.com/GrantBirki/issue-template-parser#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
     "js-yaml": "^4.0.0"
