@@ -101,3 +101,9 @@ The actions output will be
   "hot_dog_is_a_sandwich": false
 }
 ```
+
+## Releasing a New Version
+
+To release a new version run `script/release`
+
+The next commit to `main` will trigger the `release` workflow
