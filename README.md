@@ -104,6 +104,4 @@ The actions output will be
 
 ## Releasing a New Version 🏷️
 
-To release a new version run `script/release`
-
-The next commit to `main` will trigger the `release` workflow
+To release a new version run `script/release` and then publish the following release

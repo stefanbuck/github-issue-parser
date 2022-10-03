@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "build": "ncc build",
-    "test": "jest ."
+    "test": "jest .",
+    "package": "NODE_OPTIONS=--openssl-legacy-provider ncc build index.js -o dist --source-map --license licenses.txt"
   },
   "repository": {
     "type": "git",
