@@ -15,7 +15,7 @@ Use this action to convert issues into a unified JSON structure.
 - run: echo '${{ steps.issue-parser.outputs.issueparser_your_contact_details }}'
 ```
 
-`template-path` is optional and meant to be used with Issue Forms.
+`template-path` is optional and meant to be used with Issue Forms
 
 ## Example
 
