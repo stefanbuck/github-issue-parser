@@ -23,6 +23,8 @@ async function run(env, eventPayload, fs, core) {
     const templatePath = core.getInput("template-path");
     if (templatePath) {
       form = yaml.load(fs.readFileSync(templatePath, "utf8"));
+      log(`Loaded form from ${templatePath}`);
+      log(`Form: ${JSON.stringify(form)}`);
     }
   } catch (err) {
     core.error(err);
@@ -51,6 +53,8 @@ async function run(env, eventPayload, fs, core) {
   log(`body: ${body}`);
 
   const idMapping = getIDsFromIssueTemplate(form);
+
+  log(`idMapping: ${JSON.stringify(idMapping)}`);
 
   function toKey(str) {
     if (idMapping[str]) {
@@ -121,6 +125,8 @@ async function run(env, eventPayload, fs, core) {
   }
 
   const json = Object.fromEntries(result);
+
+  log(`json: ${jsonStringify(json)}`);
 
   fs.writeFileSync(
     `${env.USERPROFILE || env.HOME}/issue-parser-result.json`,
