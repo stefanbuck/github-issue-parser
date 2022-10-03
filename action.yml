@@ -1,4 +1,4 @@
-name: 'GitHub Issue Parser'
+name: 'Issue Template Parser'
 description: 'Use this action to convert issues into a unified JSON structure.'
 branding:
   icon: "check-square"
