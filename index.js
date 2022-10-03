@@ -40,6 +40,9 @@ async function run(env, eventPayload, fs, core) {
 
   let result;
   const body = eventPayload.issue.body || '';
+
+  core.debug(`body: ${body}`);
+
   const idMapping = getIDsFromIssueTemplate(form);
 
   function toKey(str) {
