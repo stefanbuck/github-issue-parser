@@ -124,7 +124,18 @@ async function run(env, eventPayload, fs, core) {
 // On GitHub Actions the `run` function is executed immediately.
 // `NODE_ENV` is set when running tests on GitHub Actions as part of CI.
 if (process.env.GITHUB_ACTIONS && process.env.NODE_ENV !== "test") {
-  const eventPayload = require(process.env.GITHUB_EVENT_PATH);
+
+  var eventPayload
+  const issueBodyInput = core.getInput("issue-body")
+  if (issueBodyInput !== '' && issueBodyInput !== null && issueBodyInput !== undefined) {
+    eventPayload = {
+      issue: {
+        body: process.env.issueBodyInput
+      }
+    }
+  } else {
+    eventPayload = require(process.env.GITHUB_EVENT_PATH);
+  }
 
   run(process.env, eventPayload, fs, core, yaml);
 }

@@ -1,9 +1,11 @@
 name: 'Issue Template Parser'
-description: 'Use this action to convert issues into a unified JSON structure.'
+description: 'Use this action to convert issues into a unified JSON structure'
 branding:
   icon: "check-square"
   color: green
 inputs:
+  issue-body:
+    description: 'The RAW body of the issue to parse if you want to override the default'
   template-path:
     description: 'Path to the issue form template file'
 outputs:
