@@ -16,6 +16,13 @@ const core = __nccwpck_require__(2186);
  * @param {fs} fs
  * @param {core} core
  */
+
+async function log(message) {
+  if (process.env.GITHUB_ACTIONS) {
+    core.info(message);
+  }
+}
+
 async function run(env, eventPayload, fs, core) {
   let form = {};
   try {
@@ -47,7 +54,7 @@ async function run(env, eventPayload, fs, core) {
   let result;
   const body = eventPayload.issue.body || '';
 
-  core.debug(`body: ${body}`);
+  log(`body: ${body}`);
 
   const idMapping = getIDsFromIssueTemplate(form);
 
@@ -137,12 +144,14 @@ if (process.env.GITHUB_ACTIONS && process.env.NODE_ENV !== "test") {
   var eventPayload
   const issueBodyInput = core.getInput("issue-body")
   if (issueBodyInput !== '' && issueBodyInput !== null && issueBodyInput !== undefined) {
+    log(`Using issue body from input: ${issueBodyInput}`)
     eventPayload = {
       issue: {
-        body: process.env.issueBodyInput
+        body: issueBodyInput
       }
     }
   } else {
+    log(`Using issue body from event payload`)
     eventPayload = require(process.env.GITHUB_EVENT_PATH);
   }
 
