@@ -102,7 +102,7 @@ The actions output will be
 }
 ```
 
-## Releasing a New Version
+## Releasing a New Version 🏷️
 
 To release a new version run `script/release`
 
