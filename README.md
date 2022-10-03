@@ -1,4 +1,4 @@
-# Issue Template Parser
+# Issue Template Parser 📜
 
 Use this action to convert issues into a unified JSON structure.
 
