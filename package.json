@@ -1,7 +1,7 @@
 {
   "name": "issue-template-parser",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use this action to convert issues into a unified JSON structure",
   "main": "index.js",
   "scripts": {
