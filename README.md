@@ -20,6 +20,18 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
     FAVORITE_DISH: ${{ steps.issue-parser.outputs.issueparser_favorite_dish }}
 ```
 
+## Migrate from v2 to v3
+
+```diff
+-- uses: stefanbuck/github-issue-parser@v2
++- uses: stefanbuck/github-issue-parser@v3
+  id: issue-parser
+  with:
++   issue-body: ${{ github.event.issue.body }}
+    template-path: .github/ISSUE_TEMPLATE/bug-report.yml
+```
+
+
 ## Example
 
 Given an issue form
