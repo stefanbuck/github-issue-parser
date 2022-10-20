@@ -9,6 +9,7 @@ inputs:
   issue-body:
     required: true
     description: 'Issue body to parse'
+    default: ${{ github.event.issue.body }}
 outputs:
   jsonString:
     description: 'JSON string'

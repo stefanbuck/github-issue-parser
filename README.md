@@ -10,7 +10,6 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
 - uses: stefanbuck/github-issue-parser@v3
   id: issue-parser
   with:
-    issue-body: ${{ github.event.issue.body }} # required
     template-path: .github/ISSUE_TEMPLATE/bug-report.yml # optional but recommended
 
 - run: cat ${HOME}/issue-parser-result.json
@@ -20,17 +19,7 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
     FAVORITE_DISH: ${{ steps.issue-parser.outputs.issueparser_favorite_dish }}
 ```
 
-## Migrate from v2 to v3
-
-```diff
--- uses: stefanbuck/github-issue-parser@v2
-+- uses: stefanbuck/github-issue-parser@v3
-  id: issue-parser
-  with:
-+   issue-body: ${{ github.event.issue.body }}
-    template-path: .github/ISSUE_TEMPLATE/bug-report.yml
-```
-
+The text to be parsed can be set explicitly using `issue-body` input, otherwise it can be left to use the default value of `${{ github.event.issue.body }}`.
 
 ## Example
 
