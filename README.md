@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/stefanbuck/github-issue-parser.svg)](https://github.com/stefanbuck/github-issue-parser/releases) [![snyk](https://snyk.io/test/github/stefanbuck/github-issue-parser/badge.svg?targetFile=package.json)](https://snyk.io/test/github/stefanbuck/github-issue-parser?targetFile=package.json)
 
-Use this action to convert issues into a unified JSON structure. 
+Use this action to convert issues into a unified JSON structure.
 
 ## Setup
 
@@ -18,6 +18,8 @@ Use this action to convert issues into a unified JSON structure.
 ```
 
 `template-path` is optional and meant to be used with Issue Forms.
+
+The text to be parsed can be set explicitly using `issue-body` input, otherwise it can be left to use the default value of `${{ github.event.issue.body }}`.
 
 ## Example
 

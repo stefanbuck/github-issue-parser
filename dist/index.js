@@ -12,11 +12,12 @@ const core = __nccwpck_require__(2186);
 
 /**
  * @param {NodeJS.ProcessEnv} env
- * @param {{issue: { body: string}}} eventPayload
+ * @param {string} body
  * @param {fs} fs
  * @param {core} core
  */
-async function run(env, eventPayload, fs, core) {
+async function run(env, body, fs, core) {
+  body = body ?? ""
   let form = {};
   try {
     const templatePath = core.getInput("template-path");
@@ -38,15 +39,32 @@ async function run(env, eventPayload, fs, core) {
           if (item.type === "markdown") {
             return null;
           }
-          return [item.attributes.label, item.id];
+          return [item.attributes.label, item.id, item.type];
+        })
+        .filter(Boolean)
+    );
+  }
+
+  function getIDTypesFromIssueTemplate(formTemplate) {
+    if (!formTemplate.body) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      formTemplate.body
+        .map((item) => {
+          if (item.type === "markdown") {
+            return null;
+          }
+          return [toKey(item.attributes.label), item.type];
         })
         .filter(Boolean)
     );
   }
 
   let result;
-  const body = eventPayload.issue.body || '';
   const idMapping = getIDsFromIssueTemplate(form);
+  const idTypes = getIDTypesFromIssueTemplate(form);
 
   function toKey(str) {
     if (idMapping[str]) {
@@ -72,6 +90,33 @@ async function run(env, eventPayload, fs, core) {
     return value;
   }
 
+  //toObject merges checkbox results in an array and spits out correctly formatted object
+  function toObject(array) {
+    let result = {};
+
+    array.forEach((item) => {
+      const key = item && item[0];
+      const value = item && item[1];
+
+      if (key in result) {
+        const content = result[key];
+
+        if (value !== undefined) {
+          result[key] = content.concat(value);
+        }
+        return;
+      }
+
+      if (idTypes[key] == "checkboxes") {
+        result[key] = value === undefined ? [] : [value];
+      } else {
+        result[key] = value;
+      }
+    });
+
+    return result
+  }
+
   result = body
     .trim()
     .split("###")
@@ -80,12 +125,18 @@ async function run(env, eventPayload, fs, core) {
       return line
         .split(/\r?\n\r?\n/)
         .filter(Boolean)
-        .map((item) => {
+        .map((item, index, arr) => {
           const line = item.trim();
+
           if (line.startsWith("- [")) {
             return line.split(/\r?\n/).map((check) => {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
-              return [`${field}`, check.toUpperCase().startsWith("- [X] ")];
+              const previousIndex = index === 0 ? index : index - 1;
+              const key = arr[previousIndex].trim();
+              if (check.toUpperCase().startsWith("- [X] ")) {
+                return [key, field];
+              }
+              return [key];
             });
           }
 
@@ -98,41 +149,39 @@ async function run(env, eventPayload, fs, core) {
       }
 
       return [...prev, curr];
-    }, [])
-    .map(([key, ...lines]) => {
-      const checkListValue = lines.find((line) => Array.isArray(line));
-      const value = checkListValue
-        ? toValue(checkListValue)
-        : toValue(...lines);
+    }, []);
 
-      return [toKey(key), value];
-    });
+  result = result.map(([key, ...lines]) => {
+    const checkListValue = lines.find((line) => Array.isArray(line));
+    const value = checkListValue ? toValue(checkListValue) : toValue(...lines);
 
-  result.forEach(([key, value]) => {
-    core.setOutput(`issueparser_${key}`, value);
+    return [toKey(key), value];
   });
+
+  result = toObject(result);
+  Object.entries(result).forEach(([key, value]) => {
+    core.setOutput(`issueparser_${key}`, Array.isArray(value) ? value.join(',') : value);
+  })
 
   function jsonStringify(json) {
     return JSON.stringify(json, null, 2);
   }
 
-  const json = Object.fromEntries(result);
-
   fs.writeFileSync(
     `${env.USERPROFILE || env.HOME}/issue-parser-result.json`,
-    jsonStringify(json),
+    jsonStringify(result),
     "utf-8"
   );
-  core.setOutput("jsonString", jsonStringify(json));
+  core.setOutput("jsonString", jsonStringify(result));
 }
 
 // We wrap the code in a `run` function to enable testing.
 // On GitHub Actions the `run` function is executed immediately.
 // `NODE_ENV` is set when running tests on GitHub Actions as part of CI.
 if (process.env.GITHUB_ACTIONS && process.env.NODE_ENV !== "test") {
-  const eventPayload = require(process.env.GITHUB_EVENT_PATH);
+  const body = core.getInput("issue-body");
 
-  run(process.env, eventPayload, fs, core, yaml);
+  run(process.env, body, fs, core);
 }
 
 module.exports.run = run;
@@ -279,7 +328,6 @@ const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
-const uuid_1 = __nccwpck_require__(5840);
 const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
@@ -309,20 +357,9 @@ function exportVariable(name, val) {
     process.env[name] = convertedVal;
     const filePath = process.env['GITHUB_ENV'] || '';
     if (filePath) {
-        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
-        // These should realistically never happen, but just in case someone finds a way to exploit uuid generation let's not allow keys or values that contain the delimiter.
-        if (name.includes(delimiter)) {
-            throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
-        }
-        if (convertedVal.includes(delimiter)) {
-            throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
-        }
-        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-        file_command_1.issueCommand('ENV', commandValue);
+        return file_command_1.issueFileCommand('ENV', file_command_1.prepareKeyValueMessage(name, val));
     }
-    else {
-        command_1.issueCommand('set-env', { name }, convertedVal);
-    }
+    command_1.issueCommand('set-env', { name }, convertedVal);
 }
 exports.exportVariable = exportVariable;
 /**
@@ -340,7 +377,7 @@ exports.setSecret = setSecret;
 function addPath(inputPath) {
     const filePath = process.env['GITHUB_PATH'] || '';
     if (filePath) {
-        file_command_1.issueCommand('PATH', inputPath);
+        file_command_1.issueFileCommand('PATH', inputPath);
     }
     else {
         command_1.issueCommand('add-path', {}, inputPath);
@@ -380,7 +417,10 @@ function getMultilineInput(name, options) {
     const inputs = getInput(name, options)
         .split('\n')
         .filter(x => x !== '');
-    return inputs;
+    if (options && options.trimWhitespace === false) {
+        return inputs;
+    }
+    return inputs.map(input => input.trim());
 }
 exports.getMultilineInput = getMultilineInput;
 /**
@@ -413,8 +453,12 @@ exports.getBooleanInput = getBooleanInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    const filePath = process.env['GITHUB_OUTPUT'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
+    }
     process.stdout.write(os.EOL);
-    command_1.issueCommand('set-output', { name }, value);
+    command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 exports.setOutput = setOutput;
 /**
@@ -543,7 +587,11 @@ exports.group = group;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
+    const filePath = process.env['GITHUB_STATE'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('STATE', file_command_1.prepareKeyValueMessage(name, value));
+    }
+    command_1.issueCommand('save-state', { name }, utils_1.toCommandValue(value));
 }
 exports.saveState = saveState;
 /**
@@ -609,13 +657,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.issueCommand = void 0;
+exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const fs = __importStar(__nccwpck_require__(7147));
 const os = __importStar(__nccwpck_require__(2037));
+const uuid_1 = __nccwpck_require__(5840);
 const utils_1 = __nccwpck_require__(5278);
-function issueCommand(command, message) {
+function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
         throw new Error(`Unable to find environment variable for file command ${command}`);
@@ -627,7 +676,22 @@ function issueCommand(command, message) {
         encoding: 'utf8'
     });
 }
-exports.issueCommand = issueCommand;
+exports.issueFileCommand = issueFileCommand;
+function prepareKeyValueMessage(key, value) {
+    const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+    const convertedValue = utils_1.toCommandValue(value);
+    // These should realistically never happen, but just in case someone finds a
+    // way to exploit uuid generation let's not allow keys or values that contain
+    // the delimiter.
+    if (key.includes(delimiter)) {
+        throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+    }
+    if (convertedValue.includes(delimiter)) {
+        throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+    }
+    return `${key}<<${delimiter}${os.EOL}${convertedValue}${os.EOL}${delimiter}`;
+}
+exports.prepareKeyValueMessage = prepareKeyValueMessage;
 //# sourceMappingURL=file-command.js.map
 
 /***/ }),
