@@ -11,7 +11,6 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
   id: issue-parser
   with:
     template-path: .github/ISSUE_TEMPLATE/bug-report.yml # optional but recommended
-    issue-body: ${{ github.event.issue.body }} # default value, can be omitted
 
 - run: cat ${HOME}/issue-parser-result.json
 
