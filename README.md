@@ -19,6 +19,8 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
     FAVORITE_DISH: ${{ steps.issue-parser.outputs.issueparser_favorite_dish }}
 ```
 
+The text to be parsed can be set explicitly using `issue-body` input, otherwise it can be left to use the default value of `${{ github.event.issue.body }}`.
+
 ## Example
 
 Given an issue form
