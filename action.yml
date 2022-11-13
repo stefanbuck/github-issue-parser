@@ -4,12 +4,10 @@ branding:
   icon: "check-square"
   color: green
 inputs:
-  issue-body:
+  body:
     description: 'The RAW body of the issue to parse if you want to override the default'
-  template-path:
-    description: 'Path to the issue form template file'
 outputs:
-  jsonString:
+  json:
     description: 'JSON string'
 runs:
   using: 'node12'
