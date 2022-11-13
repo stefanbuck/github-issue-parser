@@ -2898,7 +2898,7 @@ async function parse(body) {
         let value = issue_body.trim()
 
         // If the value for a field is empty, set it to null
-        if (value === "_No response_") {
+        if (value === "_No response_" || value === "_No response_\\") {
             value = null
         }
 
