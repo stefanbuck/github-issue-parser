@@ -1,3 +1,5 @@
+import * as core from '@actions/core'
+
 // Helper function to parse the body of the issue template
 // :param body: The body of the issue template
 // :return: A dictionary of the parsed body
@@ -7,6 +9,8 @@ export async function parse(body) {
     // Split the body up by the section headers
     const issue_body_sections_list = body.split("###")
 
+    core.debug(issue_body_sections_list)
+
     // Remove the first element of the list, which is empty
     issue_body_sections_list.shift()
 
@@ -14,6 +18,7 @@ export async function parse(body) {
     for (const section of issue_body_sections_list) {
         // Split out the issue body sections
         let issue_body = section.split("\r\n\r\n")
+        core.debug(issue_body)
 
         // make the key lowercase and snake case
         let key = issue_body[0].trim().toLowerCase().replace(/ /g, '_')
@@ -35,7 +40,10 @@ export async function parse(body) {
         parsed_issue_body_dict[key] = value
     }
 
+    core.debug(parsed_issue_body_dict)
+
     const parsed_json = JSON.stringify(parsed_issue_body_dict, null, 2)
+    core.debug(parsed_json)
 
     // Return the dictionary
     return parsed_json
