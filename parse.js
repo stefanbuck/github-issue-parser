@@ -18,8 +18,13 @@ export async function parse(body) {
         // make the key lowercase and snake case
         let key = issue_body[0].trim().toLowerCase().replace(/ /g, '_')
 
+        // Remove the first element of the list, which is the section header
+        issue_body.shift()
+        // Join the list back together with newlines
+        issue_body = issue_body.join("\n\n")
+
         // get the value from the body as well
-        let value = issue_body[1].trim()
+        let value = issue_body.trim()
 
         // If the value for a field is empty, set it to null
         if (value === "_No response_") {
