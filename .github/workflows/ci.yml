@@ -19,3 +19,5 @@ jobs:
       - run: npm run build
 
       - run: npm test
+        env:
+          CI: "false" # not really *shrug*
