@@ -1,8 +1,7 @@
 {
-  "contact": "me@me.com",
-  "what_happened": "A bug happened!",
+  "your_contact_details": "me@me.com",
+  "what_happened?": "A bug happened!",
   "version": "1.0.0",
-  "browsers": "Chrome, Safari",
-  "never_give_up": true,
-  "hot_dog_is_a_sandwich": false
+  "what_browsers_are_you_seeing_the_problem_on?": "Chrome, Safari",
+  "code_of_conduct": "- [x] Never give up\r\n- [ ] Hot Dog is a Sandwich"
 }
