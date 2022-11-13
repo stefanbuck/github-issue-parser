@@ -1,8 +1,8 @@
 {
-  "model-name": "cool molecule",
-  "model-description": "This is a prediction for a super cool molecule",
-  "model-id": "eos11aa",
-  "model-publication": "The following link is just an example:\n\nwww.example.com",
-  "model-code": "",
-  "model-license": ""
+  "model_name": "my cool molecule",
+  "model_description": "This is a prediction for a super cool molecule",
+  "ersilia_id": "eos11aa",
+  "publication": "The following link is just an example:\n\nwww.example.com",
+  "code": null,
+  "license": null
 }
