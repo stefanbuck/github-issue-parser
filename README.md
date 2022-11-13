@@ -4,67 +4,30 @@ Use this action to convert issues into a unified JSON structure.
 
 ## Setup
 
-```yml
+```yaml
 - uses: GrantBirki/issue-template-parser@vX.X.X
   id: issue-parser
   with:
-    template-path: .github/ISSUE_TEMPLATE/bug-report.yml
+    body: ${{ github.event.issue.body }}
 
-- run: echo '${{ steps.issue-parser.outputs.jsonString }}' > bug-details.json
-
-- run: echo '${{ steps.issue-parser.outputs.issueparser_your_contact_details }}'
+- run: echo ${{ steps.issue-parser.outputs.json }}
 ```
 
-`template-path` is optional and meant to be used with Issue Forms
+## Inputs
+
+| Input | Required? | Default | Description |
+| ----- | --------- | ------- | ----------- |
+| body | yes | - | The body of the issue. |
+
+## Outputs
+
+| Output | Description |
+| ------ | ----------- |
+| json | The JSON representation of the issue body |
 
 ## Example
 
-Given an issue form
-
-```yml
-name: Bug
-description: Something is broken
-
-title: "Order Pizza"
-
-body:
-  - type: input
-    id: contact
-    attributes:
-      label: Your contact details
-    validations:
-      required: true
-
-  - type: input
-    id: what_happened
-    attributes:
-      label: What happened?
-    validations:
-      required: true
-
-  - type: input
-    id: version
-    attributes:
-      label: Version
-    validations:
-      required: true
-
-  - type: input
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-    validations:
-      required: true
-
-  - type: checkboxes
-    attributes:
-      label: What else?
-      options:
-        - label: Never give up
-        - label: Hot Dog is a Sandwich
-```
-
-And an issue body
+Given the following issue body:
 
 ```md
 ### Your contact details
@@ -93,12 +56,11 @@ The actions output will be
 
 ```json
 {
-  "contact": "me@me.com",
-  "what_happened": "A bug happened!",
+  "your_contact_details": "me@me.com",
+  "what_happened?": "A bug happened!",
   "version": "1.0.0",
-  "browsers": "Chrome, Safari",
-  "never_give_up": true,
-  "hot_dog_is_a_sandwich": false
+  "what_browsers_are_you_seeing_the_problem_on?": "Chrome, Safari",
+  "code_of_conduct": "- [x] Never give up\r\n- [ ] Hot Dog is a Sandwich"
 }
 ```
 
