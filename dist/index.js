@@ -2865,6 +2865,9 @@ var core = __nccwpck_require__(186);
 async function parse(body) {
     var parsed_issue_body_dict = {}
 
+    body = String(body)
+    core.debug(body)
+
     // Split the body up by the section headers
     const issue_body_sections_list = body.split("###")
 
@@ -2876,14 +2879,7 @@ async function parse(body) {
     // Loop over the list of sections
     for (const section of issue_body_sections_list) {
         // Split out the issue body sections
-        var splitString
-        if (process.env.CI === 'true') {
-            splitString = "\\r\\n\\r\\n"
-        } else {
-            splitString = "\r\n\r\n"
-        }
-
-        let issue_body = section.split(splitString)
+        let issue_body = section.trim().split(/\r?\n/)
         core.debug(issue_body)
 
         // make the key lowercase and snake case
@@ -2892,7 +2888,7 @@ async function parse(body) {
         // Remove the first element of the list, which is the section header
         issue_body.shift()
         // Join the list back together with newlines
-        issue_body = issue_body.join("\n\n")
+        issue_body = issue_body.slice(1).join("\n")
 
         // get the value from the body as well
         let value = issue_body.trim()
