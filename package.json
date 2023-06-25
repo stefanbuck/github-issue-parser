@@ -5,9 +5,14 @@
   "description": "Use this action to convert issues into a unified JSON structure",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build",
-    "test": "jest .",
-    "package": "ncc build index.js -o dist --source-map --license licenses.txt"
+    "format": "prettier --write '**/*.js'",
+    "format-check": "prettier --check '**/*.js'",
+    "lint": "eslint ./*.js",
+    "package": "ncc build index.js -o dist --source-map --license licenses.txt",
+    "test": "(jest && make-coverage-badge --output-path ./badges/coverage.svg) || make-coverage-badge --output-path ./badges/coverage.svg",
+    "ci-test": "jest",
+    "all": "npm run format && npm run lint && npm run package",
+    "bundle": "npm run format && npm run package"
   },
   "repository": {
     "type": "git",
@@ -26,11 +31,26 @@
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
     "@vercel/ncc": "^0.34.0",
-    "jest": "^29.1.2"
+    "jest": "^29.1.2",
+    "prettier": "2.5.1",
+    "make-coverage-badge": "^1.2.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^25.3.2"
   },
-  "release": {
-    "branches": [
-      "main"
-    ]
+  "jest": {
+    "coverageReporters": [
+      "json-summary",
+      "text",
+      "lcov"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./parse.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 100
+      }
+    }
   }
 }
