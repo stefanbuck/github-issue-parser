@@ -1,5 +1,5 @@
 module.exports = {
   issue: {
-    body: null,
-  },
-};
+    body: null
+  }
+}
