@@ -14,5 +14,5 @@ outputs:
   jsonString:
     description: 'JSON string'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
