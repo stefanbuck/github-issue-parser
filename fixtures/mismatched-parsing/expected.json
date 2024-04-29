@@ -1,0 +1,9 @@
+{
+  "your_contact_details": "me@me.com",
+  "what_happened": "A bug happened!",
+  "version": "1.0.0",
+  "what_browsers_are_you_seeing_the_problem_on": "Chrome, Safari",
+  "what_else": ["Never give up"],
+  "and_with_that": ["Hot Dog is a Sandwich", "Another item"],
+  "checkbox_without_an_id": []
+}

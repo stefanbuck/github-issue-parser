@@ -1,0 +1,16 @@
+body:
+  - type: input
+    id: favorite_dish
+    attributes:
+      label: What's your favorite dish?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: favorite_color
+    attributes:
+      label:  What's your preferred color?
+      options:
+        - label: Red
+        - label: Green
+        - label: Blue
