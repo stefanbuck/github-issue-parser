@@ -90,6 +90,50 @@ it("full example", () => {
   expect(core.setOutput.mock.calls.length).toBe(8)
 });
 
+it("mismatched parsing", () => {
+  const expectedOutput = require("./fixtures/mismatched-parsing/expected.json");
+  const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
+
+  // mock ENV
+  const env = {
+    HOME: "<home path>",
+  };
+
+  // mock event payload
+  const eventPayload = require("./fixtures/mismatched-parsing/issue");
+
+  // mock fs
+  const fs = {
+    readFileSync(path, encoding) {
+      expect(path).toBe("<template-path>");
+      expect(encoding).toBe("utf8");
+      return readFileSync("fixtures/mismatched-parsing/form.yml", "utf-8");
+    },
+    writeFileSync(path, content) {
+      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(content).toBe(expectedOutputJson);
+    },
+  };
+
+  // mock core
+  const core = {
+    getInput: jest.fn(() => '<template-path>'),
+    setOutput: jest.fn(),
+  };
+
+  run(env, eventPayload, fs, core);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_your_contact_details', 'me@me.com')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_happened', 'A bug happened!')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_version', '1.0.0')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_browsers_are_you_seeing_the_problem_on', 'Chrome, Safari')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_else', 'Never give up')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_and_with_that', 'Hot Dog is a Sandwich,Another item')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_checkbox_without_an_id', '')
+  expect(core.setOutput.mock.calls.length).toBe(8)
+});
+
 it("multiple paragraphs", () => {
   const expectedOutput = require("./fixtures/multiple-paragraphs/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);

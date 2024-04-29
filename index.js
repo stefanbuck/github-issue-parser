@@ -95,7 +95,7 @@ async function run(env, body, fs, core) {
       if (key in result) {
         const content = result[key];
 
-        if (value !== undefined) {
+        if (content !== undefined && value !== undefined) {
           result[key] = content.concat(value);
         }
         return;
@@ -127,6 +127,9 @@ async function run(env, body, fs, core) {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
               const previousIndex = index === 0 ? index : index - 1;
               const key = arr[previousIndex].trim();
+              // set the type of the field to checkboxes to ensure that values will be represented as an array
+              // even when issue-form template is not provided or wrong template is provided
+              idTypes[toKey(key)] = "checkboxes";
               if (check.toUpperCase().startsWith("- [X] ")) {
                 return [key, field];
               }
