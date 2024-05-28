@@ -13,7 +13,7 @@ it("readme example", () => {
 
   // mock ENV
   const env = {
-    HOME: "<home path>",
+    RUNNER_TEMP: "<runner_temp path>",
   };
 
   // mock event payload
@@ -27,7 +27,7 @@ it("readme example", () => {
       return readFileSync("fixtures/readme-example/form.yml", "utf-8");
     },
     writeFileSync(path, content) {
-      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(path).toBe("<runner_temp path>/issue-parser-result.json");
       expect(content).toBe(expectedOutputJson);
     },
   };
@@ -52,7 +52,7 @@ it("full example", () => {
 
   // mock ENV
   const env = {
-    HOME: "<home path>",
+    RUNNER_TEMP: "<runner_temp path>",
   };
 
   // mock event payload
@@ -66,7 +66,7 @@ it("full example", () => {
       return readFileSync("fixtures/full-example/form.yml", "utf-8");
     },
     writeFileSync(path, content) {
-      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(path).toBe("<runner_temp path>/issue-parser-result.json");
       expect(content).toBe(expectedOutputJson);
     },
   };
@@ -96,7 +96,7 @@ it("multiple paragraphs", () => {
 
   // mock ENV
   const env = {
-    HOME: "<home path>",
+    RUNNER_TEMP: "<runner_temp path>",
   };
 
   // mock event payload
@@ -110,7 +110,7 @@ it("multiple paragraphs", () => {
       return readFileSync("fixtures/multiple-paragraphs/form.yml", "utf-8");
     },
     writeFileSync(path, content) {
-      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(path).toBe("<runner_temp path>/issue-parser-result.json");
       expect(content).toBe(expectedOutputJson);
     },
   };
@@ -136,7 +136,7 @@ it("blank", () => {
 
   // mock ENV
   const env = {
-    HOME: "<home path>",
+    RUNNER_TEMP: "<runner_temp path>",
   };
 
   // mock event payload
@@ -150,7 +150,7 @@ it("blank", () => {
       return readFileSync("fixtures/blank/form.yml", "utf-8");
     },
     writeFileSync(path, content) {
-      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(path).toBe("<runner_temp path>/issue-parser-result.json");
       expect(content).toBe(expectedOutputJson);
     },
   };
