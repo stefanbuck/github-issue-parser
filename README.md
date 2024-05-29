@@ -12,7 +12,7 @@ Use this action to convert issues into a unified JSON structure. Read the [Codel
   with:
     template-path: .github/ISSUE_TEMPLATE/bug-report.yml # optional but recommended
 
-- run: cat ${HOME}/issue-parser-result.json
+- run: cat ${{ runner.temp }}/issue-parser-result.json
 
 - run: echo $FAVORITE_DISH
   env:
