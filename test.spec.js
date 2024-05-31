@@ -34,25 +34,16 @@ it("readme example", () => {
 
   // mock core
   const core = {
-    getInput: jest.fn(() => "<template-path>"),
+    getInput: jest.fn(() => '<template-path>'),
     setOutput: jest.fn(),
   };
 
   run(env, eventPayload, fs, core);
-  expect(core.getInput).toHaveBeenCalledWith("template-path");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "jsonString",
-    JSON.stringify(expectedOutput, null, 2)
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_favorite_dish",
-    "Pizza"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_favorite_color",
-    "Red,Blue"
-  );
-  expect(core.setOutput.mock.calls.length).toBe(3);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_favorite_dish', 'Pizza')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_favorite_color', 'Red,Blue')
+  expect(core.setOutput.mock.calls.length).toBe(3)
 });
 
 it("full example", () => {
@@ -82,42 +73,21 @@ it("full example", () => {
 
   // mock core
   const core = {
-    getInput: jest.fn(() => "<template-path>"),
+    getInput: jest.fn(() => '<template-path>'),
     setOutput: jest.fn(),
   };
 
   run(env, eventPayload, fs, core);
-  expect(core.getInput).toHaveBeenCalledWith("template-path");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "jsonString",
-    JSON.stringify(expectedOutput, null, 2)
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_contact",
-    "me@me.com"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_what_happened",
-    "A bug happened!"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith("issueparser_version", "1.0.0");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_browsers",
-    "Chrome, Safari"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_anything_else",
-    "Never give up"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_second_anything_else",
-    "Hot Dog is a Sandwich,Another item"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_checkbox_without_an_id",
-    ""
-  );
-  expect(core.setOutput.mock.calls.length).toBe(8);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_contact', 'me@me.com')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_happened', 'A bug happened!')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_version', '1.0.0')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_browsers', 'Chrome, Safari')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_anything_else', 'Never give up')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_second_anything_else', 'Hot Dog is a Sandwich,Another item')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_checkbox_without_an_id', '')
+  expect(core.setOutput.mock.calls.length).toBe(8)
 });
 
 it("mismatched parsing", () => {
@@ -126,7 +96,7 @@ it("mismatched parsing", () => {
 
   // mock ENV
   const env = {
-    RUNNER_TEMP: "<home path>",
+    HOME: "<home path>",
   };
 
   // mock event payload
@@ -147,42 +117,21 @@ it("mismatched parsing", () => {
 
   // mock core
   const core = {
-    getInput: jest.fn(() => "<template-path>"),
+    getInput: jest.fn(() => '<template-path>'),
     setOutput: jest.fn(),
   };
 
   run(env, eventPayload, fs, core);
-  expect(core.getInput).toHaveBeenCalledWith("template-path");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "jsonString",
-    JSON.stringify(expectedOutput, null, 2)
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_your_contact_details",
-    "me@me.com"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_what_happened",
-    "A bug happened!"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith("issueparser_version", "1.0.0");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_what_browsers_are_you_seeing_the_problem_on",
-    "Chrome, Safari"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_what_else",
-    "Never give up"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_and_with_that",
-    "Hot Dog is a Sandwich,Another item"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_checkbox_without_an_id",
-    ""
-  );
-  expect(core.setOutput.mock.calls.length).toBe(8);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_your_contact_details', 'me@me.com')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_happened', 'A bug happened!')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_version', '1.0.0')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_browsers_are_you_seeing_the_problem_on', 'Chrome, Safari')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_what_else', 'Never give up')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_and_with_that', 'Hot Dog is a Sandwich,Another item')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_checkbox_without_an_id', '')
+  expect(core.setOutput.mock.calls.length).toBe(8)
 });
 
 it("multiple paragraphs", () => {
@@ -212,26 +161,17 @@ it("multiple paragraphs", () => {
 
   // mock core
   const core = {
-    getInput: jest.fn(() => "<template-path>"),
+    getInput: jest.fn(() => '<template-path>'),
     setOutput: jest.fn(),
   };
 
   run(env, eventPayload, fs, core);
 
-  expect(core.getInput).toHaveBeenCalledWith("template-path");
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "jsonString",
-    JSON.stringify(expectedOutput, null, 2)
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_textarea-one",
-    "1st paragraph\n\n2nd paragraph"
-  );
-  expect(core.setOutput).toHaveBeenCalledWith(
-    "issueparser_textarea-two",
-    "1st paragraph\n2nd paragraph"
-  );
-  expect(core.setOutput.mock.calls.length).toBe(3);
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-one', '1st paragraph\n\n2nd paragraph')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-two', '1st paragraph\n2nd paragraph')
+  expect(core.setOutput.mock.calls.length).toBe(3)
 });
 
 it("blank", () => {
