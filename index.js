@@ -165,7 +165,7 @@ async function run(env, body, fs, core) {
   }
 
   fs.writeFileSync(
-    `${env.RUNNER_TEMP}/issue-parser-result.json`,
+    `${env.USERPROFILE || env.HOME}/issue-parser-result.json`,
     jsonStringify(result),
     "utf-8"
   );
