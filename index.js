@@ -144,8 +144,6 @@ async function run(env, body, fs, core) {
             if (splitText.length === 1) {
               return line;
             }
-            const previousIndex = index === 0 ? index : index - 1;
-            const key = arr[previousIndex].trim();
             return splitText.join('\n\n')
           }
 
