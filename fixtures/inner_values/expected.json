@@ -1,0 +1,15 @@
+{
+
+	"resources": {
+		"Related PRs": "#123456",
+		"Related Issues": ""
+	},
+	"description": "Hold my Potatos",
+	"date": {
+		"Month": "April",
+		"Date": "14th",
+		"Year": "20XX"
+	},
+	"department": "Finance"
+
+}

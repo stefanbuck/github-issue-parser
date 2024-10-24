@@ -1,0 +1,52 @@
+name: Bug Report
+description: File a reproducible bug or regression.
+labels: ['bug']
+body:
+  - type: textarea
+    id: graph
+    attributes: 
+      label: Resources 
+      value: | 
+        **Related PRs**:
+        **Related Issues**:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: date
+    attributes: 
+      label: Date 
+      value: | 
+        _Month_:
+        _Day_:
+        _Year_:
+      validations: 
+        required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: How do you trigger this bug? Please walk us through it step by step.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: dropdown
+    id: department
+    attributes:
+      label: Department
+      multiple: false
+      options:
+        - IT 
+        - HR
+        - Finance
+        - Operations
+        - Warehouse
+        - Management
+        - Customer

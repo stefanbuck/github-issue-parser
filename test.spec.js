@@ -170,7 +170,7 @@ it("multiple paragraphs", () => {
   expect(core.getInput).toHaveBeenCalledWith('template-path')
   expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
   expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-one', '1st paragraph\n\n2nd paragraph')
-  expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-two', '1st paragraph\n2nd paragraph')
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-two', '1st paragraph\n\n2nd paragraph')
   expect(core.setOutput.mock.calls.length).toBe(3)
 });
 
