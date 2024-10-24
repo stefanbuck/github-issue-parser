@@ -137,17 +137,15 @@ async function run(env, body, fs, core) {
               }
               return [key];
             });
-          // Otherwise presume that input is a series of text lines and separate them.
+          // Otherwise presume that input is a collected chunk of text lines and separarate them.
           } else {
 
             const splitText = line.split(/\r?\n/);
             if (splitText.length === 1) {
-              console.log(`Returning line: ${line}`);
               return line;
             }
             const previousIndex = index === 0 ? index : index - 1;
             const key = arr[previousIndex].trim();
-            console.log(`Returning splitText: ${splitText}`);
             return splitText.join('\n\n')
           }
 
