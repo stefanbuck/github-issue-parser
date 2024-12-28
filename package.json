@@ -29,7 +29,25 @@
   },
   "release": {
     "branches": [
+      "+([0-9]).x",
       "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      "semantic-release-plugin-github-breaking-version-tag",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "dist/*"
+          ],
+          "message": "build(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
     ]
   }
 }
