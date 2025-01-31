@@ -252,6 +252,45 @@ it("paragraph with ``` section", () => {
   expect(core.setOutput.mock.calls.length).toBe(2)
 });
 
+it("paragraph with ```sh section", () => {
+  const expectedOutput = require("./fixtures/paragraph-ignore-```sh/expected.json");
+  const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
+
+  // mock ENV
+  const env = {
+    HOME: "<home path>",
+  };
+
+  // mock event payload
+  const eventPayload = require("./fixtures/paragraph-ignore-```sh/issue");
+
+  // mock fs
+  const fs = {
+    readFileSync(path, encoding) {
+      expect(path).toBe("<template-path>");
+      expect(encoding).toBe("utf8");
+      return readFileSync("fixtures/paragraph-ignore-```sh/form.yml", "utf-8");
+    },
+    writeFileSync(path, content) {
+      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(content).toBe(expectedOutputJson);
+    },
+  };
+
+  // mock core
+  const core = {
+    getInput: jest.fn(() => '<template-path>'),
+    setOutput: jest.fn(),
+  };
+
+  run(env, eventPayload, fs, core);
+
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-one', 'Textarea input text 1\n\n```sh\n### To be ignored tag\n```')
+  expect(core.setOutput.mock.calls.length).toBe(2)
+});
+
 it("blank", () => {
   const expectedOutput = require("./fixtures/blank/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
