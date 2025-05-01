@@ -27,7 +27,7 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.RELEASER_APP_ID }}
