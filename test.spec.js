@@ -10,6 +10,7 @@ import multipleParagraphsIssue from "./fixtures/multiple-paragraphs/issue.js";
 import paragraphConfusingHashesIssue from "./fixtures/paragraph-confusing-####/issue.js";
 import paragraphIgnoreCodeblockIssue from "./fixtures/paragraph-ignore-```/issue.js";
 import paragraphIgnoreCodeblockShIssue from "./fixtures/paragraph-ignore-```sh/issue.js";
+import checkboxesInTextareaIssue from "./fixtures/checkboxes-in-textarea/issue.js";
 
 function loadJson(path) {
   return JSON.parse(readFileSync(path, "utf-8"));
@@ -301,6 +302,45 @@ it("paragraph with ```sh section", () => {
   expect(core.getInput).toHaveBeenCalledWith('template-path')
   expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
   expect(core.setOutput).toHaveBeenCalledWith('issueparser_textarea-one', 'Textarea input text 1\n\n```sh\n### To be ignored tag\n```')
+  expect(core.setOutput.mock.calls.length).toBe(2)
+});
+
+it("checkboxes in textarea", () => {
+  const expectedOutput = loadJson("./fixtures/checkboxes-in-textarea/expected.json");
+  const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
+
+  // mock ENV
+  const env = {
+    HOME: "<home path>",
+  };
+
+  // mock event payload
+  const eventPayload = checkboxesInTextareaIssue;
+
+  // mock fs
+  const fs = {
+    readFileSync(path, encoding) {
+      expect(path).toBe("<template-path>");
+      expect(encoding).toBe("utf8");
+      return readFileSync("fixtures/checkboxes-in-textarea/form.yml", "utf-8");
+    },
+    writeFileSync(path, content) {
+      expect(path).toBe("<home path>/issue-parser-result.json");
+      expect(content).toBe(expectedOutputJson);
+    },
+  };
+
+  // mock core
+  const core = {
+    getInput: jest.fn(() => '<template-path>'),
+    setOutput: jest.fn(),
+  };
+
+  run(env, eventPayload, fs, core);
+
+  expect(core.getInput).toHaveBeenCalledWith('template-path')
+  expect(core.setOutput).toHaveBeenCalledWith('jsonString', JSON.stringify(expectedOutput, null, 2))
+  expect(core.setOutput).toHaveBeenCalledWith('issueparser_description', 'Some text:\n\n- [ ] Red\n- [ ] Green\n- [ ] Blue\n\nMore text')
   expect(core.setOutput.mock.calls.length).toBe(2)
 });
 
