@@ -122,10 +122,12 @@ async function run(env, body, fs, core) {
         .map((item, index, arr) => {
           const line = item.trim();
 
-          if (line.startsWith("- [")) {
+          // Allow the use of checkboxes in a textarea and transform the section into an array only when the section starts with a checkbox. 
+          // This doesn't cover the case when the textarea starts with a checkbox followed by text.
+          if (index === 1 && line.startsWith("- [")) {
             return line.split(/\r?\n/).map((check) => {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
-              const previousIndex = index === 0 ? index : index - 1;
+              const previousIndex = Math.max(0, index - 1);
               const key = arr[previousIndex].trim();
               // set the type of the field to checkboxes to ensure that values will be represented as an array
               // even when issue-form template is not provided or wrong template is provided
