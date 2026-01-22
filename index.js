@@ -76,8 +76,8 @@ async function run(env, body, fs, core) {
       return input;
     }
 
-    const value = [input, ...extraLines].join("\n\n").trim();
-
+    let value = [input, ...extraLines].join("\n\n").trim();
+    
     if (value.toLowerCase() === "_no response_") {
       return "";
     }
@@ -111,20 +111,22 @@ async function run(env, body, fs, core) {
     return result
   }
 
+  // Divide each issue into its component sections.
   result = body
     .trim()
     .split("###")
     .filter(Boolean)
-    .map((line) => {
-      return line
+    .map((section) => {
+      return section
         .split(/\r?\n\r?\n/)
         .filter(Boolean)
         .map((item, index, arr) => {
           const line = item.trim();
-
+          // If the relevant input is a checkbox element
           if (line.startsWith("- [")) {
             return line.split(/\r?\n/).map((check) => {
               const field = check.replace(/- \[[X\s]\]\s+/i, "");
+
               const previousIndex = index === 0 ? index : index - 1;
               const key = arr[previousIndex].trim();
               // set the type of the field to checkboxes to ensure that values will be represented as an array
@@ -135,12 +137,20 @@ async function run(env, body, fs, core) {
               }
               return [key];
             });
+          // Otherwise presume that input is a collected chunk of text lines and separarate them.
+          } else {
+
+            const splitText = line.split(/\r?\n/);
+            if (splitText.length === 1) {
+              return line;
+            }
+            return splitText.join('\n\n')
           }
 
-          return line;
         });
     })
     .reduce((prev, curr) => {
+      // If the item is a checkbox field
       if (Array.isArray(curr[1])) {
         return [...prev, ...curr[1]];
       }
@@ -151,7 +161,6 @@ async function run(env, body, fs, core) {
   result = result.map(([key, ...lines]) => {
     const checkListValue = lines.find((line) => Array.isArray(line));
     const value = checkListValue ? toValue(checkListValue) : toValue(...lines);
-
     return [toKey(key), value];
   });
 
