@@ -4,9 +4,10 @@
   "version": "3.2.3",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "ncc build",
-    "test": "jest ."
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ."
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,7 @@
   },
   "homepage": "https://github.com/stefanbuck/github-issue-parser#readme",
   "dependencies": {
-    "@actions/core": "^2.0.1",
+    "@actions/core": "^3.0.1",
     "js-yaml": "^4.1.1"
   },
   "devDependencies": {

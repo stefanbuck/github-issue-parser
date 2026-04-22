@@ -1,8 +1,8 @@
 // @ts-check
 
-const fs = require("fs");
-const yaml = require("js-yaml");
-const core = require("@actions/core");
+import fs from "node:fs";
+import yaml from "js-yaml";
+import * as core from "@actions/core";
 
 /**
  * @param {NodeJS.ProcessEnv} env
@@ -10,7 +10,7 @@ const core = require("@actions/core");
  * @param {fs} fs
  * @param {core} core
  */
-async function run(env, body, fs, core) {
+export async function run(env, body, fs, core) {
   body = body ?? ""
   let form = {};
   try {
@@ -180,5 +180,3 @@ if (process.env.GITHUB_ACTIONS && process.env.NODE_ENV !== "test") {
 
   run(process.env, body, fs, core);
 }
-
-module.exports.run = run;
