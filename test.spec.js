@@ -1,6 +1,16 @@
-const { readFileSync } = require("fs");
+import { readFileSync } from "node:fs";
+import { jest, it, expect } from "@jest/globals";
 
-const { run } = require(".");
+import { run } from "./index.js";
+
+import readmeExampleIssue from "./fixtures/readme-example/issue.js";
+import fullExampleIssue from "./fixtures/full-example/issue.js";
+import mismatchedParsingIssue from "./fixtures/mismatched-parsing/issue.js";
+import multipleParagraphsIssue from "./fixtures/multiple-paragraphs/issue.js";
+
+function loadJson(path) {
+  return JSON.parse(readFileSync(path, "utf-8"));
+}
 
 it("smoke test", () => {
   expect(run).toBeDefined();
@@ -8,7 +18,7 @@ it("smoke test", () => {
 });
 
 it("readme example", () => {
-  const expectedOutput = require("./fixtures/readme-example/expected.json");
+  const expectedOutput = loadJson("./fixtures/readme-example/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -17,7 +27,7 @@ it("readme example", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/readme-example/issue");
+  const eventPayload = readmeExampleIssue;
 
   // mock fs
   const fs = {
@@ -47,7 +57,7 @@ it("readme example", () => {
 });
 
 it("full example", () => {
-  const expectedOutput = require("./fixtures/full-example/expected.json");
+  const expectedOutput = loadJson("./fixtures/full-example/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -56,7 +66,7 @@ it("full example", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/full-example/issue");
+  const eventPayload = fullExampleIssue;
 
   // mock fs
   const fs = {
@@ -91,7 +101,7 @@ it("full example", () => {
 });
 
 it("mismatched parsing", () => {
-  const expectedOutput = require("./fixtures/mismatched-parsing/expected.json");
+  const expectedOutput = loadJson("./fixtures/mismatched-parsing/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -100,7 +110,7 @@ it("mismatched parsing", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/mismatched-parsing/issue");
+  const eventPayload = mismatchedParsingIssue;
 
   // mock fs
   const fs = {
@@ -135,7 +145,7 @@ it("mismatched parsing", () => {
 });
 
 it("multiple paragraphs", () => {
-  const expectedOutput = require("./fixtures/multiple-paragraphs/expected.json");
+  const expectedOutput = loadJson("./fixtures/multiple-paragraphs/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -144,7 +154,7 @@ it("multiple paragraphs", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/multiple-paragraphs/issue");
+  const eventPayload = multipleParagraphsIssue;
 
   // mock fs
   const fs = {
@@ -175,7 +185,7 @@ it("multiple paragraphs", () => {
 });
 
 it("blank", () => {
-  const expectedOutput = require("./fixtures/blank/expected.json");
+  const expectedOutput = loadJson("./fixtures/blank/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
