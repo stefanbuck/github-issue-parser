@@ -1,0 +1,9 @@
+body:
+  - type: textarea
+    id: textarea-one
+    attributes:
+      label: My textarea input
+  - type: textarea
+    id: textarea-two
+    attributes:
+      label: Another textarea input
