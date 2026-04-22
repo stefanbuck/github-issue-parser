@@ -7,6 +7,9 @@ import readmeExampleIssue from "./fixtures/readme-example/issue.js";
 import fullExampleIssue from "./fixtures/full-example/issue.js";
 import mismatchedParsingIssue from "./fixtures/mismatched-parsing/issue.js";
 import multipleParagraphsIssue from "./fixtures/multiple-paragraphs/issue.js";
+import paragraphConfusingHashesIssue from "./fixtures/paragraph-confusing-####/issue.js";
+import paragraphIgnoreCodeblockIssue from "./fixtures/paragraph-ignore-```/issue.js";
+import paragraphIgnoreCodeblockShIssue from "./fixtures/paragraph-ignore-```sh/issue.js";
 
 function loadJson(path) {
   return JSON.parse(readFileSync(path, "utf-8"));
@@ -185,7 +188,7 @@ it("multiple paragraphs", () => {
 });
 
 it("paragraph with confusing ####", () => {
-  const expectedOutput = require("./fixtures/paragraph-confusing-####/expected.json");
+  const expectedOutput = loadJson("./fixtures/paragraph-confusing-####/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -194,7 +197,7 @@ it("paragraph with confusing ####", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/paragraph-confusing-####/issue");
+  const eventPayload = paragraphConfusingHashesIssue;
 
   // mock fs
   const fs = {
@@ -224,7 +227,7 @@ it("paragraph with confusing ####", () => {
 });
 
 it("paragraph with ``` section", () => {
-  const expectedOutput = require("./fixtures/paragraph-ignore-```/expected.json");
+  const expectedOutput = loadJson("./fixtures/paragraph-ignore-```/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -233,7 +236,7 @@ it("paragraph with ``` section", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/paragraph-ignore-```/issue");
+  const eventPayload = paragraphIgnoreCodeblockIssue;
 
   // mock fs
   const fs = {
@@ -263,7 +266,7 @@ it("paragraph with ``` section", () => {
 });
 
 it("paragraph with ```sh section", () => {
-  const expectedOutput = require("./fixtures/paragraph-ignore-```sh/expected.json");
+  const expectedOutput = loadJson("./fixtures/paragraph-ignore-```sh/expected.json");
   const expectedOutputJson = JSON.stringify(expectedOutput, null, 2);
 
   // mock ENV
@@ -272,7 +275,7 @@ it("paragraph with ```sh section", () => {
   };
 
   // mock event payload
-  const eventPayload = require("./fixtures/paragraph-ignore-```sh/issue");
+  const eventPayload = paragraphIgnoreCodeblockShIssue;
 
   // mock fs
   const fs = {
