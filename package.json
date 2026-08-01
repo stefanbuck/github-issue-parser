@@ -22,7 +22,7 @@
   "homepage": "https://github.com/stefanbuck/github-issue-parser#readme",
   "dependencies": {
     "@actions/core": "^3.0.1",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^5.2.2"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.4",
